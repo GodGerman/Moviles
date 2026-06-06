@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">Organizador de Tareas</string>
+
+    <!-- Navigation Drawer -->
+    <string name="nav_add_event">Añadir Evento</string>
+    <string name="nav_consult_events">Consultar y Modificar</string>
+    <string name="nav_calendar">Mostrar Calendario</string>
+    <string name="nav_backup">Realizar Respaldo</string>
+    <string name="nav_restore">Restaurar Datos</string>
+    <string name="nav_about">Acerca de...</string>
+    <string name="nav_exit">Salir</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Inicio</string>
+    <string name="nav_consult">Consultar</string>
+
+    <!-- Home Fragment -->
+    <string name="home_title">Eventos Recientes</string>
+    <string name="no_events_message">No hay eventos para los próximos días.</string>
+
+    <!-- Add Event Fragment -->
+    <string name="add_event_title">Nuevo Evento</string>
+    <string name="hint_description">Descripción de la tarea</string>
+    <string name="label_category">Categoría:</string>
+    <string name="label_status">Estatus:</string>
+    <string name="btn_select_date">Seleccionar Fecha</string>
+    <string name="btn_select_time">Seleccionar Hora</string>
+    <string name="btn_select_contact">Seleccionar Contacto</string>
+    <string name="btn_select_location">Seleccionar Ubicación</string>
+    <string name="btn_save">Guardar Evento</string>
+    <string name="label_reminder">Recordatorio:</string>
+    <string name="label_filter_category">Filtrar por Categoría:</string>
+    <string name="label_filter_date">Filtrar por Fecha:</string>
+    <string name="btn_clear_filters">Limpiar Filtros</string>
+    <string name="all_categories">Todas las categorías</string>
+
+    <!-- Categories -->
+    <string-array name="categories_array">
+        <item>Cita</item>
+        <item>Junta</item>
+        <item>Entrega de proyecto</item>
+        <item>Examen</item>
+        <item>Otros</item>
+    </string-array>
+
+    <!-- Statuses -->
+    <string-array name="status_array">
+        <item>Pendiente</item>
+        <item>Realizado</item>
+        <item>Aplazado</item>
+    </string-array>
+
+    <!-- Reminders -->
+    <string-array name="reminders_array">
+        <item>Sin recordatorio</item>
+        <item>A la hora</item>
+        <item>10 min antes</item>
+        <item>1 día antes</item>
+    </string-array>
+</resources>

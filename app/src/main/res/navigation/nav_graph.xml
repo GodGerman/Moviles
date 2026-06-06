@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.proyecto.ui.home.HomeFragment"
+        android:label="Inicio" />
+
+    <fragment
+        android:id="@+id/nav_add_event"
+        android:name="com.example.proyecto.ui.add.AddEventFragment"
+        android:label="Añadir Evento" />
+
+    <fragment
+        android:id="@+id/nav_consult_events"
+        android:name="com.example.proyecto.ui.consult.ConsultEventsFragment"
+        android:label="Consultar Eventos" />
+
+    <fragment
+        android:id="@+id/nav_calendar"
+        android:name="com.example.proyecto.ui.calendar.CalendarFragment"
+        android:label="Calendario" />
+
+    <fragment
+        android:id="@+id/nav_backup"
+        android:name="com.example.proyecto.ui.backup.BackupFragment"
+        android:label="Respaldo" />
+
+    <fragment
+        android:id="@+id/nav_restore"
+        android:name="com.example.proyecto.ui.restore.RestoreFragment"
+        android:label="Restaurar" />
+
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="com.example.proyecto.ui.about.AboutFragment"
+        android:label="Acerca de" />
+
+</navigation>

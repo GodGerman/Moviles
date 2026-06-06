@@ -1,0 +1,85 @@
+# ============================================
+# Android / Kotlin - .gitignore
+# ============================================
+
+# ---------- Gradle ----------
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# ---------- Android Studio / IntelliJ IDEA ----------
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/deploymentTargetSelector.xml
+.idea/deviceManager.xml
+.idea/planningMode.xml
+*.iml
+*.iws
+*.ipr
+
+# ---------- Propiedades locales ----------
+local.properties
+
+# ---------- Kotlin ----------
+.kotlin/
+
+# ---------- Archivos de compilación y empaquetado ----------
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# ---------- Archivos generados ----------
+bin/
+gen/
+out/
+captures/
+
+# ---------- Native / NDK ----------
+.externalNativeBuild/
+.cxx/
+obj/
+
+# ---------- Logs y crash reports ----------
+*.log
+*.hprof
+
+# ---------- Archivos del sistema operativo ----------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ---------- Signing / Keystores ----------
+*.jks
+*.keystore
+!debug.keystore
+
+# ---------- Google Services (contiene API keys) ----------
+google-services.json
+
+# ---------- ProGuard / R8 mapping ----------
+app/proguard-rules.pro
+!app/proguard-rules.pro
+mapping/
+
+# ---------- Room schema exports (opcional, algunos equipos sí los versionan) ----------
+# app/schemas/

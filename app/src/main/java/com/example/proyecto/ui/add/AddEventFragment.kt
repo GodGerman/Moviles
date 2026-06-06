@@ -31,7 +31,7 @@ class AddEventFragment : Fragment() {
     
     private var selectedDate = ""
     private var selectedTime = ""
-    private var selectedContact = "Ninguno"
+    private var selectedContact = ""
     private var lat = 0.0
     private var lng = 0.0
 
@@ -41,8 +41,8 @@ class AddEventFragment : Fragment() {
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
             lat = result.data?.getDoubleExtra("lat", 0.0) ?: 0.0
             lng = result.data?.getDoubleExtra("lng", 0.0) ?: 0.0
-            view?.findViewById<TextView>(R.id.tv_selected_location)?.text = 
-                String.format("Ubicación: %.4f, %.4f", lat, lng)
+            view?.findViewById<TextView>(R.id.tv_selected_location)?.text =
+                getString(R.string.item_location_format, lat, lng)
         }
     }
 
@@ -107,7 +107,7 @@ class AddEventFragment : Fragment() {
         btnSave.setOnClickListener {
             val description = etDescription.text.toString()
             if (description.isBlank() || selectedDate.isBlank() || selectedTime.isBlank()) {
-                Toast.makeText(context, "Por favor completa los campos básicos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.toast_fill_required_fields, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -119,13 +119,13 @@ class AddEventFragment : Fragment() {
                 estatus = spinnerStatus.selectedItem.toString(),
                 ubicacion_lat = lat,
                 ubicacion_lng = lng,
-                contacto_nombre = selectedContact,
+                contacto_nombre = selectedContact.ifBlank { getString(R.string.default_contact) },
                 recordatorio_tipo = spinnerReminder.selectedItemPosition
             )
 
             eventViewModel.insert(event)
             scheduleNotification(event)
-            Toast.makeText(context, "Evento guardado con éxito", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.toast_event_saved, Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()
         }
 
@@ -151,7 +151,7 @@ class AddEventFragment : Fragment() {
 
         if (delay > 0) {
             val data = Data.Builder()
-                .putString("title", "Recordatorio: ${event.categoria}")
+                .putString("title", getString(R.string.notification_reminder_prefix, event.categoria))
                 .putString("description", event.descripcion)
                 .build()
 

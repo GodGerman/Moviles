@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Superficies Dark Mode -->
+    <color name="md_background">#FF121212</color>
+    <color name="md_surface">#FF1E1E1E</color>
+    <color name="md_on_background">#FFE3E3E3</color>
+    <color name="md_on_surface">#FFE3E3E3</color>
+    <color name="md_surface_variant">#FF2C2C2C</color>
+
+    <!-- Textos Dark Mode -->
+    <color name="text_primary">#FFE3E3E3</color>
+    <color name="text_secondary">#FFAAAAAA</color>
+    <color name="text_hint">#FF757575</color>
+
+    <!-- Calendario -->
+    <color name="calendar_header">#FF9FA8DA</color>
+    <color name="calendar_day_header">#FFAAAAAA</color>
+    <color name="calendar_today_stroke">#FF9FA8DA</color>
+    <color name="calendar_selected_bg">#FF5C6BC0</color>
+    
+    <!-- Misc -->
+    <color name="divider">#1FFFFFFF</color>
+    <color name="card_stroke">#1FFFFFFF</color>
+</resources>

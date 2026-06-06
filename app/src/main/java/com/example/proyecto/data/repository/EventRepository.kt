@@ -26,4 +26,8 @@ class EventRepository(private val eventDao: EventDao) {
     fun getFilteredEvents(category: String?, date: String?): Flow<List<EventEntity>> {
         return eventDao.getFilteredEvents(category, date)
     }
+
+    fun getAllDatesWithEvents(): Flow<List<String>> {
+        return eventDao.getAllDatesWithEvents()
+    }
 }

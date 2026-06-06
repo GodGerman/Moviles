@@ -31,7 +31,18 @@ class ConsultEventsFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_consult_events, container, false)
 
         val recyclerView: RecyclerView = root.findViewById(R.id.rv_consult_results)
-        adapter = EventAdapter()
+
+        // Crear adapter con callbacks de clics
+        adapter = EventAdapter(
+            onItemClick = { event ->
+                val bottomSheet = EventDetailsBottomSheet.newInstance(event)
+                bottomSheet.show(childFragmentManager, "EventDetailsBottomSheet")
+            },
+            onEditClick = { event ->
+                val dialog = EditEventDialogFragment.newInstance(event)
+                dialog.show(childFragmentManager, "EditEventDialog")
+            }
+        )
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 

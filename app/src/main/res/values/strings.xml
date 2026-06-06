@@ -7,7 +7,7 @@
     <string name="nav_calendar">Mostrar Calendario</string>
     <string name="nav_backup">Realizar Respaldo</string>
     <string name="nav_restore">Restaurar Datos</string>
-    <string name="nav_about">Acerca de...</string>
+    <string name="nav_about">Acerca de…</string>
     <string name="nav_exit">Salir</string>
 
     <!-- Bottom Navigation -->
@@ -21,16 +21,18 @@
     <!-- Add Event Fragment -->
     <string name="add_event_title">Nuevo Evento</string>
     <string name="hint_description">Descripción de la tarea</string>
-    <string name="label_category">Categoría:</string>
-    <string name="label_status">Estatus:</string>
+    <string name="label_category">Categoría</string>
+    <string name="label_status">Estatus</string>
     <string name="btn_select_date">Seleccionar Fecha</string>
     <string name="btn_select_time">Seleccionar Hora</string>
     <string name="btn_select_contact">Seleccionar Contacto</string>
     <string name="btn_select_location">Seleccionar Ubicación</string>
     <string name="btn_save">Guardar Evento</string>
-    <string name="label_reminder">Recordatorio:</string>
-    <string name="label_filter_category">Filtrar por Categoría:</string>
-    <string name="label_filter_date">Filtrar por Fecha:</string>
+    <string name="label_reminder">Recordatorio</string>
+
+    <!-- Consult Fragment -->
+    <string name="label_filter_category">Filtrar por Categoría</string>
+    <string name="label_filter_date">Filtrar por Fecha</string>
     <string name="btn_clear_filters">Limpiar Filtros</string>
     <string name="all_categories">Todas las categorías</string>
 
@@ -57,4 +59,46 @@
         <item>10 min antes</item>
         <item>1 día antes</item>
     </string-array>
+
+    <!-- Calendar Fragment -->
+    <string name="btn_prev_month">Mes anterior</string>
+    <string name="btn_next_month">Mes siguiente</string>
+    <string name="day_sun">Dom</string>
+    <string name="day_mon">Lun</string>
+    <string name="day_tue">Mar</string>
+    <string name="day_wed">Mié</string>
+    <string name="day_thu">Jue</string>
+    <string name="day_fri">Vie</string>
+    <string name="day_sat">Sáb</string>
+    <string name="calendar_events_title">Eventos del día</string>
+
+    <!-- Edit Event Dialog -->
+    <string name="edit_event_title">Modificar Evento</string>
+    <string name="btn_edit_event">Editar evento</string>
+    <string name="btn_save_changes">Guardar Cambios</string>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="hint_contact">Nombre del contacto</string>
+    <string name="hint_latitude">Latitud</string>
+    <string name="hint_longitude">Longitud</string>
+
+    <!-- Event Card (item_event) -->
+    <string name="item_category_placeholder">Categoría</string>
+    <string name="item_status_placeholder">Estatus</string>
+    <string name="item_datetime_placeholder">Fecha y Hora</string>
+    <string name="item_description_placeholder">Descripción del evento</string>
+    <string name="item_location_contact_placeholder">Ubicación | Contacto</string>
+    <string name="item_location_format">Ubicación: %1$.4f, %2$.4f</string>
+    <string name="item_info_format">📍 %1$.4f, %2$.4f  ·  👤 %3$s</string>
+
+    <!-- Toasts / Messages -->
+    <string name="toast_fill_required_fields">Por favor completa los campos básicos</string>
+    <string name="toast_event_saved">Evento guardado con éxito</string>
+    <string name="toast_event_updated">Evento actualizado con éxito</string>
+    <string name="default_contact">Ninguno</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Recordatorios de Tareas</string>
+    <string name="notification_default_title">Recordatorio de Evento</string>
+    <string name="notification_default_body">Tienes una tarea pendiente.</string>
+    <string name="notification_reminder_prefix">Recordatorio: %1$s</string>
 </resources>

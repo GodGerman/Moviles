@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Bordes redondeados para el badge -->
+    <corners android:radius="12dp" />
+    <!-- Color base sólido (blanco por defecto), en Kotlin se le aplica un 'tint' de color dinámicamente -->
+    <solid android:color="#FFFFFF" />
+</shape>

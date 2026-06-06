@@ -23,7 +23,12 @@ class HomeFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         
         val recyclerView: RecyclerView = root.findViewById(R.id.rv_events)
-        val adapter = EventAdapter()
+        val adapter = EventAdapter(
+            onItemClick = { event ->
+                val bottomSheet = com.example.proyecto.ui.consult.EventDetailsBottomSheet.newInstance(event)
+                bottomSheet.show(childFragmentManager, "EventDetailsBottomSheet")
+            }
+        )
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 

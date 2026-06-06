@@ -4,30 +4,30 @@
         <item
             android:id="@+id/nav_add_event"
             android:icon="@android:drawable/ic_menu_add"
-            android:title="Añadir Evento" />
+            android:title="@string/nav_add_event" />
         <item
             android:id="@+id/nav_consult_events"
             android:icon="@android:drawable/ic_menu_search"
-            android:title="Consultar y Modificar" />
+            android:title="@string/nav_consult_events" />
         <item
             android:id="@+id/nav_calendar"
             android:icon="@android:drawable/ic_menu_today"
-            android:title="Mostrar Calendario" />
+            android:title="@string/nav_calendar" />
         <item
             android:id="@+id/nav_backup"
             android:icon="@android:drawable/stat_sys_upload"
-            android:title="Realizar Respaldo" />
+            android:title="@string/nav_backup" />
         <item
             android:id="@+id/nav_restore"
             android:icon="@android:drawable/stat_sys_download"
-            android:title="Restaurar Datos" />
+            android:title="@string/nav_restore" />
         <item
             android:id="@+id/nav_about"
             android:icon="@android:drawable/ic_menu_info_details"
-            android:title="Acerca de..." />
+            android:title="@string/nav_about" />
         <item
             android:id="@+id/nav_exit"
             android:icon="@android:drawable/ic_menu_close_clear_cancel"
-            android:title="Salir" />
+            android:title="@string/nav_exit" />
     </group>
 </menu>

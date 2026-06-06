@@ -1,9 +1,91 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme (Light) -->
     <style name="Base.Theme.Proyecto" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Color scheme -->
+        <item name="colorPrimary">@color/md_primary</item>
+        <item name="colorPrimaryVariant">@color/md_primary_variant</item>
+        <item name="colorOnPrimary">@color/md_on_primary</item>
+        <item name="colorSecondary">@color/md_secondary</item>
+        <item name="colorSecondaryVariant">@color/md_secondary_variant</item>
+        <item name="colorOnSecondary">@color/md_on_secondary</item>
+        <item name="android:colorBackground">@color/md_background</item>
+        <item name="colorSurface">@color/md_surface</item>
+        <item name="colorOnSurface">@color/md_on_surface</item>
+        <item name="colorOnBackground">@color/md_on_background</item>
+        <item name="colorError">@color/md_error</item>
+        <item name="colorOnError">@color/md_on_error</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/md_primary_variant</item>
+
+        <!-- Default TextInputLayout style = OutlinedBox -->
+        <item name="textInputStyle">@style/Widget.Proyecto.TextInputLayout</item>
+
+        <!-- Default MaterialButton style -->
+        <item name="materialButtonStyle">@style/Widget.Proyecto.Button</item>
+
+        <!-- Default MaterialCardView style -->
+        <item name="materialCardViewStyle">@style/Widget.Proyecto.CardView</item>
     </style>
 
     <style name="Theme.Proyecto" parent="Base.Theme.Proyecto" />
+
+    <!-- ====== Component Styles ====== -->
+
+    <!-- TextInputLayout: OutlinedBox con esquinas redondeadas -->
+    <style name="Widget.Proyecto.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeColor">@color/md_primary</item>
+        <item name="hintTextColor">@color/md_primary</item>
+    </style>
+
+    <!-- MaterialButton: Filled con esquinas redondeadas -->
+    <style name="Widget.Proyecto.Button" parent="Widget.Material3.Button">
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <!-- MaterialButton: Outlined -->
+    <style name="Widget.Proyecto.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="cornerRadius">12dp</item>
+        <item name="strokeColor">@color/md_primary</item>
+    </style>
+
+    <!-- MaterialButton: Text -->
+    <style name="Widget.Proyecto.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <!-- MaterialCardView: Tarjetas con elevación suave -->
+    <style name="Widget.Proyecto.CardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+    <!-- Badge de estatus en la tarjeta -->
+    <style name="Widget.Proyecto.StatusBadge" parent="">
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Título de sección -->
+    <style name="TextAppearance.Proyecto.Headline" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Label de formulario -->
+    <style name="TextAppearance.Proyecto.Label" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

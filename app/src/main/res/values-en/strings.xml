@@ -1,0 +1,104 @@
+<resources>
+    <string name="app_name">Task Organizer</string>
+
+    <!-- Navigation Drawer -->
+    <string name="nav_add_event">Add Event</string>
+    <string name="nav_consult_events">View &amp; Edit</string>
+    <string name="nav_calendar">Calendar</string>
+    <string name="nav_backup">Backup</string>
+    <string name="nav_restore">Restore Data</string>
+    <string name="nav_about">About…</string>
+    <string name="nav_exit">Exit</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_consult">View</string>
+
+    <!-- Home Fragment -->
+    <string name="home_title">Recent Events</string>
+    <string name="no_events_message">No events in the next few days.</string>
+
+    <!-- Add Event Fragment -->
+    <string name="add_event_title">New Event</string>
+    <string name="hint_description">Task description</string>
+    <string name="label_category">Category</string>
+    <string name="label_status">Status</string>
+    <string name="btn_select_date">Select Date</string>
+    <string name="btn_select_time">Select Time</string>
+    <string name="btn_select_contact">Select Contact</string>
+    <string name="btn_select_location">Select Location</string>
+    <string name="btn_save">Save Event</string>
+    <string name="label_reminder">Reminder</string>
+
+    <!-- Consult Fragment -->
+    <string name="label_filter_category">Filter by Category</string>
+    <string name="label_filter_date">Filter by Date</string>
+    <string name="btn_clear_filters">Clear Filters</string>
+    <string name="all_categories">All categories</string>
+
+    <!-- Categories -->
+    <string-array name="categories_array">
+        <item>Appointment</item>
+        <item>Meeting</item>
+        <item>Project Delivery</item>
+        <item>Exam</item>
+        <item>Other</item>
+    </string-array>
+
+    <!-- Statuses -->
+    <string-array name="status_array">
+        <item>Pending</item>
+        <item>Done</item>
+        <item>Postponed</item>
+    </string-array>
+
+    <!-- Reminders -->
+    <string-array name="reminders_array">
+        <item>No reminder</item>
+        <item>At event time</item>
+        <item>10 min before</item>
+        <item>1 day before</item>
+    </string-array>
+
+    <!-- Calendar Fragment -->
+    <string name="btn_prev_month">Previous month</string>
+    <string name="btn_next_month">Next month</string>
+    <string name="day_sun">Sun</string>
+    <string name="day_mon">Mon</string>
+    <string name="day_tue">Tue</string>
+    <string name="day_wed">Wed</string>
+    <string name="day_thu">Thu</string>
+    <string name="day_fri">Fri</string>
+    <string name="day_sat">Sat</string>
+    <string name="calendar_events_title">Events for this day</string>
+
+    <!-- Edit Event Dialog -->
+    <string name="edit_event_title">Edit Event</string>
+    <string name="btn_edit_event">Edit event</string>
+    <string name="btn_save_changes">Save Changes</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="hint_contact">Contact name</string>
+    <string name="hint_latitude">Latitude</string>
+    <string name="hint_longitude">Longitude</string>
+
+    <!-- Event Card (item_event) -->
+    <string name="item_category_placeholder">Category</string>
+    <string name="item_status_placeholder">Status</string>
+    <string name="item_datetime_placeholder">Date and Time</string>
+    <string name="item_description_placeholder">Event description</string>
+    <string name="item_location_contact_placeholder">Location | Contact</string>
+    <string name="item_location_format">Location: %1$.4f, %2$.4f</string>
+    <string name="item_info_format">📍 %1$.4f, %2$.4f  ·  👤 %3$s</string>
+
+    <!-- Toasts / Messages -->
+    <string name="toast_fill_required_fields">Please fill in the required fields</string>
+    <string name="toast_event_saved">Event saved successfully</string>
+    <string name="toast_event_updated">Event updated successfully</string>
+    <string name="default_contact">None</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Task Reminders</string>
+    <string name="notification_default_title">Event Reminder</string>
+    <string name="notification_default_body">You have a pending task.</string>
+    <string name="notification_reminder_prefix">Reminder: %1$s</string>
+</resources>

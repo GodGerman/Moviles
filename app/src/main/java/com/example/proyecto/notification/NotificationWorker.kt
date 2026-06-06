@@ -12,8 +12,8 @@ import com.example.proyecto.R
 class NotificationWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
     override fun doWork(): Result {
-        val title = inputData.getString("title") ?: "Recordatorio de Evento"
-        val description = inputData.getString("description") ?: "Tienes una tarea pendiente."
+        val title = inputData.getString("title") ?: applicationContext.getString(R.string.notification_default_title)
+        val description = inputData.getString("description") ?: applicationContext.getString(R.string.notification_default_body)
 
         sendNotification(title, description)
         return Result.success()
@@ -24,7 +24,7 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
         val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "Recordatorios de Tareas", NotificationManager.IMPORTANCE_HIGH)
+            val channel = NotificationChannel(channelId, applicationContext.getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_HIGH)
             notificationManager.createNotificationChannel(channel)
         }
 

@@ -23,4 +23,7 @@ interface EventDao {
 
     @Query("SELECT * FROM events WHERE (:category IS NULL OR categoria = :category) AND (:date IS NULL OR fecha = :date)")
     fun getFilteredEvents(category: String?, date: String?): Flow<List<EventEntity>>
+
+    @Query("SELECT DISTINCT fecha FROM events")
+    fun getAllDatesWithEvents(): Flow<List<String>>
 }

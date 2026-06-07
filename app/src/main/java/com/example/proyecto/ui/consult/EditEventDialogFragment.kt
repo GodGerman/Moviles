@@ -28,21 +28,30 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.textfield.TextInputEditText
 import java.util.*
 
+/**
+ * Propósito: Diálogo modal (DialogFragment) para Editar o Eliminar un evento existente.
+ * Rol en MVVM: Capa de Presentación (UI Layer). Un DialogFragment se renderiza "flotando" por encima de la pantalla actual. Contiene la lógica para precargar el formulario con datos existentes y despachar la actualización o borrado a través de `EventViewModel`.
+ * Interacciones: Se vincula estrechamente a [EventViewModel]. Invoca actividades externas como [com.example.proyecto.ui.map.MapsActivity] o el selector de contactos del sistema operativo. Cancela alarmas residuales en `WorkManager` al eliminar.
+ */
 class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
 
     private val eventViewModel: EventViewModel by activityViewModels()
 
+    // Datos temporales del evento a editar alojados en memoria
     private var eventId: Int = 0
     private var selectedDate: String = ""
     private var selectedTime: String = ""
-    
     private var lat = 0.0
     private var lng = 0.0
     private var selectedContact = ""
 
+    // Vista de previsualización del mapa incrustada
     private var mapView: MapView? = null
     
-    // Launchers
+    /**
+     * Propósito: Launcher moderno (`registerForActivityResult`) encargado de solicitar la recolección de nuevas coordenadas espaciales.
+     * Lógica interna: Espera el código `RESULT_OK` de la Actividad de Mapas. Sobrescribe la latitud y longitud, actualiza las etiquetas de UI de solo lectura y, de manera asíncrona, vuelve a renderizar el mapa incrustado `mapView?.getMapAsync(this)` para reflejar visualmente el salto geográfico de inmediato.
+     */
     private val mapLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -52,11 +61,15 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
             view?.findViewById<TextView>(R.id.et_edit_lat)?.text = lat.toString()
             view?.findViewById<TextView>(R.id.et_edit_lng)?.text = lng.toString()
             
-            // Actualizar el mapa
+            // Recargamos asíncronamente el pequeño mapa para que refleje la nueva ubicación
             mapView?.getMapAsync(this)
         }
     }
 
+    /**
+     * Propósito: Launcher para solicitar el acceso a la agenda nativa del dispositivo.
+     * Lógica interna: Ejecuta un intent para buscar contactos. Al recibir `RESULT_OK`, abre un Cursor apuntando al URI retornado mediante el `ContentResolver` del sistema, extrayendo y almacenando el `DISPLAY_NAME` en la variable interna y refrescando la UI con el nuevo nombre.
+     */
     private val contactPickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -72,6 +85,9 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Companion object provee un método estático tipo Factory `newInstance` seguro para inicializar este DialogFragment inyectándole argumentos predefinidos por Bundle.
+     */
     companion object {
         private const val ARG_EVENT_ID = "event_id"
         private const val ARG_CATEGORIA = "categoria"
@@ -103,6 +119,12 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
         }
     }
 
+    /**
+     * Propósito: Modifica el comportamiento predeterminado de Android para redimensionar el diálogo en pantalla.
+     * Parámetros: Ninguno.
+     * Retorno: Ninguno.
+     * Lógica interna: Forzamos a que la ventana de este cuadro de diálogo ocupe el 90% del ancho real de la pantalla en lugar de encapsularse estrictamente, usando los pixeles proporcionales para mejorar la legibilidad del mapa interno.
+     */
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(
@@ -111,6 +133,20 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
         )
     }
 
+    /**
+     * Propósito: Materializa la interfaz interactiva, extrayendo e instalando la información suministrada previamente a través del Bundle para rellenar los componentes del formulario.
+     * Parámetros:
+     * - inflater: Mecanismo constructor XML.
+     * - container: Contenedor subyacente de jerarquía.
+     * - savedInstanceState: Estado preservable en rotaciones.
+     * Retorno: Raíz de vista [View].
+     * Lógica interna:
+     * 1. Extrae cada propiedad inyectada.
+     * 2. Localiza cada widget visual y le atribuye su valor correspondiente, incluyendo la búsqueda manual de índices en los Arreglos (`categories.indexOf`) para situar los Spinners en la selección original.
+     * 3. Configura los listeners clásicos de Fecha y Hora precargando el calendario con los datos originales parseados para su edición contextual natural.
+     * 4. Asigna los `mapLauncher` y `contactPickerLauncher` a sus botones interactivos.
+     * 5. Fuerza la inyección asincrónica inicial del `MapView` interno pasando por `onCreate`.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -213,6 +249,14 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
         return root
     }
 
+    /**
+     * Propósito: Aquí, después de que la Vista base se creó, inyectamos botones de acción (Cancelar, Borrar, Guardar) dinámicamente usando código Kotlin en lugar de XML.
+     * Parámetros:
+     * - view: Vista pre-construida base.
+     * - savedInstanceState: Estado.
+     * Retorno: Ninguno.
+     * Lógica interna: Manipula programáticamente un `LinearLayout` incrustando botones generados al vuelo para demostrar flexibilidad de diseño sin depender meramente de XML, asignándoles acciones destructivas (`deleteEvent`) y constructivas (`saveEvent`).
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -246,6 +290,7 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
             ).apply {
                 marginEnd = 4
             }
+            // 'dismiss()' destruye y cierra este DialogFragment de manera segura
             setOnClickListener { dismiss() }
         }
 
@@ -294,6 +339,13 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
         container.addView(buttonLayout)
     }
     
+    /**
+     * Propósito: Reacción automática al llamado asíncrono de finalización de mapa embebido.
+     * Parámetros:
+     * - googleMap: Componente mapa a gobernar.
+     * Retorno: Ninguno.
+     * Lógica interna: Elimina íconos de toolbar basura (`isMapToolbarEnabled = false`), limpia la instancia, dibuja un marcador y focaliza el centro con un zoom predefinido.
+     */
     override fun onMapReady(googleMap: com.google.android.gms.maps.GoogleMap) {
         googleMap.uiSettings.isMapToolbarEnabled = false
         val position = LatLng(lat, lng)
@@ -302,7 +354,7 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f))
     }
 
-    // --- MapView Lifecycle ---
+    // --- Ciclo de Vida del MapView Incrustado ---
     override fun onResume() {
         super.onResume()
         mapView?.onResume()
@@ -328,6 +380,16 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
         mapView?.onLowMemory()
     }
 
+    /**
+     * Propósito: Toma los nuevos valores re-llenados del formulario y sobreescribe un registro existente usando UPDATE.
+     * Parámetros:
+     * - root: Vista inicial referenciada para recolectar información actual de los campos interactivos.
+     * Retorno: Ninguno.
+     * Lógica interna:
+     * 1. Extrae Spinners y EditTexts para ensamblar una clase [EventEntity] clónica.
+     * 2. CRÍTICO: Debe asignar exactamente el mismo ID interno (`id = eventId`) a la entidad de paso; de lo contrario, Room producirá un INSERT en lugar de un UPDATE, causando elementos duplicados en la lista del usuario.
+     * 3. Ejecuta `eventViewModel.update`, reporta éxito visual al usuario y procede a `dismiss()` para desaparecer.
+     */
     private fun saveEvent(root: View) {
         val spinnerCategory: Spinner = root.findViewById(R.id.spinner_edit_category)
         val spinnerStatus: Spinner = root.findViewById(R.id.spinner_edit_status)
@@ -358,6 +420,15 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
         dismiss()
     }
 
+    /**
+     * Propósito: Muestra un diálogo de confirmación estricta antes de eliminar permanentemente el registro de manera irrevocable.
+     * Parámetros: Ninguno.
+     * Retorno: Ninguno.
+     * Lógica interna:
+     * 1. Crea un `EventEntity` cascarón con datos basura excepto el ID, que es el único rastreador que necesita Room para hacer su trabajo.
+     * 2. Despliega un componente nativo de Android `AlertDialog.Builder`.
+     * 3. CRÍTICO: Si el usuario aprueba, no sólo borra del SQLite local, sino que cancela asertivamente (`cancelUniqueWork`) cualquier tarea inyectada remanente sobre este ID específico pendiente dentro del sistema de `WorkManager`, evitando así que alarmas fantasmas despabilen al usuario de un evento inexistente en su historial. Luego ejecuta `dismiss()`.
+     */
     private fun deleteEvent() {
         val eventToDelete = EventEntity(
             id = eventId,
@@ -371,13 +442,17 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
             contacto_nombre = "",
             recordatorio_tipo = 0
         )
-        // Dialog confirmation
+        // Dialog de confirmación de Android nativo de protección (AlertDialog)
         androidx.appcompat.app.AlertDialog.Builder(requireContext())
             .setTitle(R.string.title_delete_event)
             .setMessage(R.string.msg_confirm_delete)
             .setPositiveButton(R.string.btn_delete) { _, _ ->
                 eventViewModel.delete(eventToDelete)
+                
+                // CRÍTICO: Prevenimos notificaciones 'fantasma' si el usuario elimina
+                // una tarea que aún tenía pendiente emitir su aviso planificado en segundo plano.
                 androidx.work.WorkManager.getInstance(requireContext()).cancelUniqueWork("event_${eventId}")
+                
                 Toast.makeText(context, R.string.toast_event_deleted, Toast.LENGTH_SHORT).show()
                 dismiss()
             }

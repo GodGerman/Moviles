@@ -1,120 +1,109 @@
-# App Organizador de Tareas
+# 🚀 Organizador de Tareas
 
-## 1. Descripción del Proyecto
-[cite_start]Desarrollo de una aplicación móvil nativa orientada a la gestión y control de tareas (organizador)[cite: 3]. [cite_start]El proyecto se desarrollará en Android Studio utilizando Kotlin[cite: 3]. [cite_start]La persistencia de datos se gestionará de forma local mediante SQLite[cite: 152].
+**Organizador de Tareas** es una aplicación móvil nativa para Android diseñada para gestionar, planificar y sincronizar actividades diarias de manera eficiente. Más allá de ser una herramienta organizativa.
 
----
-
-## 2. Fase 1: Configuración Inicial del Proyecto
-
-### 2.1. Creación del Proyecto en Android Studio
-1. Configurar el lenguaje a **Kotlin** y el SDK mínimo compatible (recomendado API 24+).
-
-### 2.2. Configuración de Dependencias (build.gradle)
-Es necesario integrar las siguientes librerías para cumplir con los requerimientos:
-* [cite_start]**Room Database:** Para abstraer y facilitar el manejo de SQLite[cite: 152].
-* [cite_start]**Navigation Component:** Para gestionar los fragmentos del menú hamburguesa y la Bottom Navigation Bar[cite: 12].
-* [cite_start]**Google Play Services (Maps & Location):** Para seleccionar y guardar la ubicación de los eventos[cite: 38].
-* [cite_start]**API de Contactos de Android:** Para leer los contactos del dispositivo[cite: 37].
-* [cite_start]**Google Drive API / Dropbox SDK:** Para el módulo de respaldo y restauración en la nube[cite: 142, 143].
-* [cite_start]**WorkManager / AlarmManager:** Para programar las notificaciones locales[cite: 148].
+**Desarrolladores:**
+* César Fernando Aguilar Bautista
+* Laura Michelle Dorantes Andrade
+* Sofía Denisse Nájera García
 
 ---
 
-## 3. Fase 2: Arquitectura de la Base de Datos (SQLite)
+## 🧠 Arquitectura de Software
 
-[cite_start]La aplicación guardará la información de forma local usando SQLite[cite: 152]. Se recomienda implementar la arquitectura MVVM (Model-View-ViewModel) junto con Room.
+### MVVM (Model-View-ViewModel)
+Este proyecto implementa el patrón de arquitectura **MVVM**. En el desarrollo moderno de software, mezclar la lógica de la interfaz de usuario con la lógica de negocio o de acceso a datos resulta en código espagueti, difícil de mantener y probar.
 
-### 3.1. Entidad Principal (`EventEntity`)
-[cite_start]Crear una tabla que almacene los siguientes atributos[cite: 36, 39]:
-* `id` (Primary Key, Autoincremental)
-* [cite_start]`categoria` (String/Enum): Cita, Junta, Entrega de proyecto, Examen, Otros[cite: 14, 15, 16, 17, 18, 19].
-* [cite_start]`fecha` (String/Long): Formato dd/mm/aaaa[cite: 26, 39].
-* [cite_start]`hora` (String): Formato HH:mm[cite: 27, 39].
-* [cite_start]`descripcion` (String)[cite: 28, 39].
-* [cite_start]`estatus` (String): Pendiente, Realizado, Aplazado[cite: 39].
-* [cite_start]`ubicacion_lat` y `ubicacion_lng` (Double): Coordenadas del mapa[cite: 38].
-* [cite_start]`contacto_uri` o `contacto_nombre` (String): Nombre seleccionado del celular[cite: 37].
-* [cite_start]`recordatorio_tipo` (Int): 0 (Sin recordatorio), 1 (A la hora), 2 (10 min antes), 3 (1 día antes)[cite: 40].
+*   **Model (Modelo):** Representa la capa de datos (bases de datos, APIs). Es responsable de gestionar la lógica de negocio y proveer la información limpia a las capas superiores.
+*   **View (Vista):** Representa la interfaz gráfica (Actividades y Fragmentos en Android). Su única responsabilidad es observar los cambios en los datos y actualizar la pantalla, capturando las interacciones del usuario sin realizar cálculos complejos.
+*   **ViewModel:** Actúa como el puente o intermediario. Expone flujos de datos (como `LiveData` o `StateFlow`) que la Vista observa. Sobrevive a los cambios de configuración del dispositivo (como girar la pantalla), evitando que los datos se pierdan o se vuelvan a cargar desde la base de datos innecesariamente.
 
-### 3.2. DAO (Data Access Object)
-Definir las consultas SQLite necesarias:
-* `insertEvent(event)`
-* `updateEvent(event)`
-* `deleteEvent(event)`
-* [cite_start]Consultas con filtros para el módulo de búsqueda: por fecha exacta, por rango, por mes, por año y por categoría[cite: 43, 44, 45, 46, 47].
+El uso estricto de MVVM asegura que nuestra aplicación sea escalable, modular, fácilmente testeable y que cumpla con el principio de responsabilidad única (SOLID).
 
 ---
 
-## 4. Fase 3: Diseño de Interfaz y Navegación (UI/UX)
+## 🛠️ Tecnologías Utilizadas (Sección Didáctica)
+### 1. Kotlin
+*   **¿Qué es?** Es el lenguaje de programación moderno, multiparadigma, oficial y fuertemente recomendado por Google para el desarrollo en Android.
+*   **¿Por qué se usó?** A diferencia de Java, Kotlin es **seguro contra nulos (Null Safety)** desde su diseño. Esto reduce drásticamente los errores en tiempo de ejecución (como el temido `NullPointerException` que hace crashear las apps). Además, su sintaxis concisa y el uso de *Coroutines* facilita enormemente la programación asíncrona sin bloquear el hilo principal de la interfaz de usuario.
 
-### 4.1. Navigation Drawer (Menú Lateral)
-[cite_start]Implementar el menú desplegable lateral [cite: 4] con texto e íconos para las siguientes rutas:
-1. [cite_start]Añadir Eventos [cite: 5]
-2. [cite_start]Consultar y modificación de Eventos [cite: 6]
-3. [cite_start]Mostrar Calendario [cite: 7]
-4. [cite_start]Realizar Respaldo en Dropbox o google drive [cite: 8]
-5. [cite_start]Restaurar datos de Dropbox o Google drive [cite: 9]
-6. [cite_start]Acerca de.. [cite: 10]
-7. [cite_start]Salir [cite: 11]
+### 2. Room Database (SQLite)
+*   **¿Qué es?** Room es una biblioteca de persistencia de datos de Google que proporciona una capa de abstracción sobre SQLite (el motor de base de datos relacional integrado en los teléfonos Android). Funciona de manera similar a un ORM (Object-Relational Mapping).
+*   **¿Por qué se usó?** Escribir consultas SQL crudas en texto plano es propenso a errores tipográficos y es difícil de mantener. Room nos protege de esto verificando las consultas SQL en *tiempo de compilación*.
+    *   **Entidades (Entities):** Usamos clases de datos (Data Classes) anotadas para representar automáticamente tablas en la base de datos.
+    *   **DAOs (Data Access Objects):** Son interfaces donde definimos los métodos para interactuar con la base de datos (Insertar, Actualizar, Borrar, Leer), aislando completamente la lógica de acceso a datos del resto de la aplicación.
 
-### 4.2. Bottom Navigation Bar
-[cite_start]Agregar una barra inferior global con texto e íconos para las opciones principales: Inicio, Consultar y Salir[cite: 12].
+### 3. ViewBinding
+*   **¿Qué es?** Es una característica de Android Jetpack que genera automáticamente una clase de enlace (binding class) para cada archivo de diseño XML de la interfaz gráfica.
+*   **¿Por qué se usó?** Es el reemplazo moderno y seguro del antiguo y problemático método `findViewById`. Mientras que `findViewById` podía devolver nulos si un ID no existía en el layout actual, o causar excepciones de tipo por casteos inseguros, ViewBinding garantiza **seguridad de tipos** y **seguridad de nulos**, evitando colapsos inesperados en la UI. Las vistas se convierten en propiedades directas del objeto *binding*.
 
----
+### 4. Material Design 3
+*   **¿Qué es?** Es la versión más reciente del sistema de diseño creado por Google, que proporciona directrices, componentes visuales prefabricados y herramientas para crear interfaces de usuario hermosas y funcionales.
+*   **¿Por qué se usó?** Para garantizar una UI/UX (Interfaz y Experiencia de Usuario) moderna, accesible y coherente con el ecosistema Android actual. Material 3 nos permitió implementar elementos como botones flotantes, tarjetas y barras de navegación estandarizadas y estéticamente agradables sin reinventar la rueda.
 
-## 5. Fase 4: Desarrollo de Módulos (Paso a Paso)
+### 5. Google Maps SDK & FusedLocationProviderClient
+*   **¿Qué es?** El SDK de Maps permite incrustar funcionalidad de mapas de Google directamente en la app. El *FusedLocationProviderClient* es la API de ubicación más moderna de Google Play Services, optimizada para gestionar el uso de batería y ofrecer alta precisión.
+*   **¿Por qué se usó?** Para permitir a los usuarios asociar una ubicación geográfica específica a sus tareas. El FusedLocationProviderClient captura las coordenadas actuales de forma rápida y eficiente. Para la visualización en listas, se implementó el **"Lite Mode"** de Google Maps, el cual renderiza una imagen estática (bitmap) del mapa en lugar de un motor de renderizado interactivo completo. Esto ahorra masivamente memoria RAM y recursos del procesador cuando solo se necesita una vista previa.
 
-### 5.1. Módulo: Inicio (Home)
-* [cite_start]**Objetivo:** Pantalla principal al abrir la aplicación[cite: 150].
-* [cite_start]**Acción:** Recuperar de SQLite los eventos del día actual y de los próximos 4 días[cite: 151].
-* **UI:** Mostrar los resultados en un `RecyclerView` (lista). [cite_start]Cada tarjeta (item) debe mostrar: fecha, categoría, status, ubicación y persona[cite: 151].
+### 6. Google Drive API (OAuth 2.0)
+*   **¿Qué es?** La interfaz de programación que permite a nuestra aplicación comunicarse de forma segura con el almacenamiento en la nube de Google Drive de cada usuario.
+*   **¿Por qué se usó?** Para habilitar la funcionalidad crítica de respaldo y restauración en la nube (Cloud Sync).
+    *   **Flujo OAuth 2.0:** Es el protocolo estándar de la industria para autorización delegada. Permite que el usuario otorgue permisos a nuestra app para leer/escribir en su Drive sin que nuestra app jamás conozca su contraseña. El usuario se autentica de forma segura en una pantalla de Google, y Google nos devuelve un *token de acceso temporal* que usamos para firmar nuestras peticiones.
+    *   **Respaldo SQLite:** Para el respaldo, la aplicación empaqueta los archivos físicos que componen la base de datos Room (`.db`, `.db-wal` [Write-Ahead Log] y `.db-shm`) y los sube a un espacio oculto y seguro en Drive llamado `appDataFolder`, garantizando que los datos no se pierdan si el usuario cambia o pierde su dispositivo.
 
-### 5.2. Módulo: Añadir Eventos
-* **Objetivo:** Formulario de captura de datos.
-* **Componentes clave:**
-    * [cite_start]Selector (`Spinner` o botones) para la Categoría y el Status inicial[cite: 14, 29].
-    * [cite_start]`DatePickerDialog` y `TimePickerDialog` para capturar la fecha y la hora[cite: 25, 27].
-    * **Integración de Contactos:** Un botón que dispare un `Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)`. [cite_start]Al seleccionar un contacto, recuperar su nombre y mostrarlo en el formulario[cite: 37].
-    * **Integración de Mapas:** Un botón que abra una actividad con un `SupportMapFragment`. [cite_start]El usuario coloca un marcador, y al confirmar, se guardan las coordenadas y se muestra la ubicación en el formulario[cite: 38].
-    * [cite_start]Selector para el tipo de notificación (10 min antes, 1 día antes, etc.)[cite: 40].
-* [cite_start]**Acción Final:** Botón "Guardar" que inserta el objeto en la base de datos a través de Room[cite: 34].
-
-### 5.3. Módulo: Consulta y Modificación de Eventos
-* **Objetivo:** Búsqueda avanzada y operaciones CRUD.
-* [cite_start]**Filtros UI:** Implementar selectores para filtrar por Rango, Año, Día, Mes y Categoría[cite: 51, 52, 53].
-* [cite_start]**Visualización:** Tabla o `RecyclerView` adaptable que muestre los resultados de la consulta SQLite[cite: 48].
-* **Interacción en los resultados:**
-    * [cite_start]Incluir opciones en cada evento para abrir el contacto y ver el mapa guardado[cite: 48].
-    * [cite_start]Al tocar un evento, permitir actualizar el estatus (Pendiente, Realizado, Aplazado)[cite: 115].
-    * [cite_start]Permitir modificar el contacto y la ubicación[cite: 116].
-    * [cite_start]Incluir un botón/icono para eliminar el evento permanentemente de SQLite[cite: 117].
-
-### 5.4. Módulo: Mostrar Calendario
-* [cite_start]**UI:** Implementar un `CalendarView` nativo o una librería de calendario de terceros[cite: 119].
-* [cite_start]**Lógica:** Consultar la base de datos para obtener las fechas con eventos registrados y dibujar un distintivo (ej. un punto de color) en esos días[cite: 120].
-* [cite_start]**Interacción:** Al hacer clic en un día con marca, abrir un `DialogFragment` o navegar a un nuevo `Fragment` mostrando el detalle de los eventos de ese día[cite: 120].
+### 7. WorkManager / AlarmManager (Notificaciones)
+*   **¿Qué son?** Son las APIs oficiales de Android para programar y garantizar la ejecución de tareas en segundo plano (Background Tasks).
+*   **¿Por qué se usaron?** El sistema operativo Android es extremadamente estricto al matar procesos en segundo plano para ahorrar batería de forma agresiva (Doze Mode).
+    *   **AlarmManager** se utilizó para programar recordatorios exactos en el tiempo (por ejemplo, "Lanzar una notificación hoy a las 15:00 hrs"). Despierta el dispositivo en el momento exacto requerido.
+    *   **WorkManager** se empleó para tareas diferidas que deben ejecutarse obligatoriamente de forma asíncrona, incluso si la app se cierra o el dispositivo se reinicia (ideal para lanzar rutinas de limpieza o sincronizaciones secundarias respetando las restricciones del sistema).
 
 ---
 
-## 6. Fase 5: Notificaciones (Servicios en Segundo Plano)
+## 📱 Módulos y Funcionalidades
 
-* [cite_start]**Requisito:** El usuario no ve esto como un menú, opera en el "background"[cite: 147].
-* [cite_start]**Implementación:** Al momento de guardar un evento (Paso 5.2), leer la opción de recordatorio[cite: 148].
-* **Lógica:** * Calcular el tiempo exacto (ej. Timestamp del evento menos 10 minutos).
-    * Configurar un `AlarmManager` o un `WorkManager` (recomendado) para que dispare un `BroadcastReceiver` en ese momento exacto.
-    * [cite_start]El `BroadcastReceiver` construirá y lanzará una `NotificationCompat` mostrando el título y descripción de la tarea al usuario[cite: 148].
+El proyecto "Organizador de Tareas" se compone de los siguientes módulos principales de cara al usuario:
+
+*   **Gestión de Eventos (CRUD completo):** Interfaz para la creación, lectura detallada, actualización y eliminación de tareas.
+*   **Filtrado y Clasificación:** Capacidad de organizar, buscar y filtrar tareas por fecha, estado de completado y categoría asignada.
+*   **Calendario Interactivo:** Vista mensual y semanal que permite una planificación visual rápida de la agenda del mes.
+*   **Geolocalización:** Asignación visual de ubicaciones a las tareas, con mapas ligeros integrados en la interfaz.
+*   **Sincronización en la Nube:** Sistema de respaldo manual hacia la cuenta personal de Google Drive del usuario.
+*   **Sistema de Alertas Locales:** Notificaciones push programadas para recordar al usuario sobre eventos próximos importantes.
 
 ---
 
-## 7. Fase 6: Respaldo y Restauración en la Nube
+## ⚙️ Guía de Instalación y Configuración
 
-* [cite_start]**Objetivo:** Exportar la base de datos SQLite local a Google Drive o Dropbox[cite: 143].
-* **Lógica de Respaldo:**
-    1. Autenticar al usuario con la API seleccionada (ej. Google Sign-In para Drive).
-    2. Localizar el archivo físico de la base de datos SQLite en el almacenamiento interno de la app (generalmente en `/data/data/com.tu.paquete/databases/`).
-    3. [cite_start]Subir este archivo (`.db`) a la carpeta de aplicación del usuario en la nube[cite: 143].
-* **Lógica de Restauración:**
-    1. [cite_start]Descargar el archivo `.db` desde la nube[cite: 144].
-    2. Sobrescribir el archivo de la base de datos actual en el dispositivo local.
-    3. [cite_start]Reiniciar la instancia de Room/SQLite para que los cambios surtan efecto en la interfaz[cite: 144].
+### 1. Clonar el repositorio
+Abre tu terminal y ejecuta:
+```bash
+git clone https://github.com/USUARIO/organizador-de-tareas.git
+cd organizador-de-tareas
+```
+*(Posteriormente, abre la carpeta raíz del proyecto utilizando **Android Studio**).*
+
+### 2. Configuración de la API Key de Google Maps
+Para que los módulos de geolocalización y renderizado de mapas funcionen y no muestren una pantalla en blanco:
+1. Dirígete a la [Google Cloud Console](https://console.cloud.google.com/).
+2. Crea un proyecto y habilita la API **Maps SDK for Android**.
+3. Genera una credencial de tipo *API Key*.
+4. En la raíz de tu proyecto local en Android Studio, busca o crea un archivo llamado `local.properties`.
+5. Añade la siguiente línea con tu clave (este archivo es ignorado por Git por seguridad):
+   ```properties
+   MAPS_API_KEY=TU_API_KEY_AQUI
+   ```
+
+### 3. Configuración de Google Drive y SHA-1
+El módulo de sincronización en la nube utiliza el flujo de autenticación OAuth 2.0. Si intentas correr la app en tu emulador o dispositivo físico sin realizar este paso, **la autenticación fallará silenciosamente** o será rechazada por Google. Esto se debe a que Google verifica criptográficamente que la app esté siendo compilada por un desarrollador autorizado.
+
+1. **Obtener la huella SHA-1 de Debug de tu máquina local:**
+   * En Android Studio, abre el panel lateral de **Gradle** (usualmente a la derecha).
+   * Navega a `TU_PROYECTO -> Tasks -> android -> signingReport` y haz doble clic.
+   * Abre la pestaña de *Run* en la parte inferior y copia la huella que dice `SHA1`.
+2. **Registrar la huella en Google Cloud:**
+   * Regresa a tu proyecto en Google Cloud Console.
+   * Ve a **APIs y Servicios -> Credenciales**.
+   * Crea una nueva credencial de tipo **ID de cliente de OAuth**.
+   * Selecciona **Android** como tipo de aplicación.
+   * Ingresa el **Nombre del paquete** exacto del proyecto (encuéntralo en `build.gradle` a nivel de módulo o en el `AndroidManifest.xml`).
+   * Pega la huella **SHA-1** que copiaste en el paso anterior y guarda.

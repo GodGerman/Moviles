@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     ==========================================================================
+     Archivo: fragment_backup.xml
+     Propósito: Diseño de la pantalla de Respaldos (Backup).
+     Permite al usuario autenticarse mediante Google Drive y subir la DB SQLite.
+     ==========================================================================
+-->
+<!-- 
+     LinearLayout: Diseño lineal básico.
+     Usa orientación vertical centrada (gravity="center") para apilar
+     el texto y los botones al centro exacto de la pantalla.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,12 +32,18 @@
         android:textAlignment="center"
         android:layout_marginBottom="32dp"/>
 
+    <!-- Botón de Autenticación con Google -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_authenticate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/btn_auth_google" />
 
+    <!-- 
+         Botón de Iniciar Respaldo.
+         Arranca desactivado (enabled="false") por defecto. Solo se activará 
+         programáticamente desde Kotlin cuando la autenticación de Google devuelva éxito.
+    -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_start_backup"
         android:layout_width="match_parent"
@@ -34,6 +52,11 @@
         android:enabled="false"
         android:text="@string/btn_start_backup" />
 
+    <!-- 
+         ProgressBar: Indicador de carga circular (Spinner).
+         Arranca oculto (visibility="gone") y aparece mientras se efectúa 
+         la subida (I/O) del archivo a la nube para indicar al usuario que debe esperar.
+    -->
     <ProgressBar
         android:id="@+id/progress_backup"
         android:layout_width="wrap_content"

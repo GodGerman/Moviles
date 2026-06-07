@@ -17,18 +17,45 @@ import com.example.proyecto.viewmodel.EventViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Propósito: Fragmento que renderiza un Calendario interactivo modularizado hecho a medida.
+ * Rol en MVVM: Capa de Presentación (UI Layer). El componente `CalendarView` pre-construido de Android es notoriamente opaco y difícil de personalizar; en su lugar, esta clase calcula matemáticamente una matriz de días que es orquestada y pintada por un `GridLayoutManager`. Recopila datos cruzados usando al `EventViewModel`.
+ * Interacciones: Se sirve del [EventViewModel]. Construye dos listas: Una matriz usando [CalendarAdapter] y una subsecuente lista para resultados renderizada por [EventAdapter]. Puede desplegar el [com.example.proyecto.ui.consult.EventDetailsBottomSheet].
+ */
 class CalendarFragment : Fragment() {
 
     private val eventViewModel: EventViewModel by activityViewModels()
+    
+    // Adaptador listado inferior de tareas resultantes para el día seleccionado
     private lateinit var eventAdapter: EventAdapter
+    
+    // Adaptador tipo Grid que aloja los 35/42 bloques de los días del mes
     private lateinit var calendarAdapter: CalendarAdapter
 
+    // Pivote maestro; memoria RAM que almacena en qué mes y año tiene el usuario posicionado su visor
     private var currentCalendar: Calendar = Calendar.getInstance()
+    
+    // Rastreador del día numérico (1-31) que el usuario presionó (-1 == deseleccionado).
     private var selectedDay: Int = -1
+    
+    // Colección estructural (Hash Set sin orden secuencial) diseñada para dar respuestas booleanas veloces en O(1) de si un string de fecha se haya aquí.
     private var datesWithEventsSet: Set<String> = emptySet()
 
     private lateinit var tvMonthYear: TextView
 
+    /**
+     * Propósito: Inicialización primaria y uniones lógicas de Vistas-Controladores.
+     * Parámetros:
+     * - inflater: Herramienta XML.
+     * - container: Nodo base.
+     * - savedInstanceState: Caché de la app.
+     * Retorno: Objeto de Vista [View].
+     * Lógica interna:
+     * 1. Enlaza variables gráficas y dos adaptadores distintos al mismo Layout.
+     * 2. El `rvCalendarGrid` divide el listado obligatoriamente en 7 columnas inflexibles emulando el DOM. l-m-m-j-v-s-d.
+     * 3. Mapea la lógica de botones Mes Atrás y Mes Adelante para alterar la matemática de la fecha central e instruir borrados temporales.
+     * 4. Lanza una escucha global en LiveData (`datesWithEvents`) desde Room. Su único propósito es procesar los strings a estándar ISO y re-empaquetarlos como Set súper veloz, para que, instantes después, mande a repintar y aparezcan/desaparezcan puntitos.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,16 +69,17 @@ class CalendarFragment : Fragment() {
         val rvCalendarGrid: RecyclerView = root.findViewById(R.id.rv_calendar_grid)
         val rvCalendarEvents: RecyclerView = root.findViewById(R.id.rv_calendar_events)
 
-        // Configurar adapter del grid del calendario
+        // Callback invocado a través del CalendarAdapter cuando el usuario hace Tap a una de las celdas
         calendarAdapter = CalendarAdapter { dayOfMonth ->
             selectedDay = dayOfMonth
+            // El usuario tocó algo; reescribir toda la cuadrícula en color y lanzar la query SQL en fondo
             updateCalendarGrid()
             loadEventsForSelectedDay()
         }
         rvCalendarGrid.adapter = calendarAdapter
+        // Dividir la lista matemática en 7 columnas equivalentes a L-M-M-J-V-S-D.
         rvCalendarGrid.layoutManager = GridLayoutManager(context, 7)
 
-        // Configurar adapter de la lista de eventos
         eventAdapter = EventAdapter(
             onItemClick = { event ->
                 val bottomSheet = com.example.proyecto.ui.consult.EventDetailsBottomSheet.newInstance(event)
@@ -61,14 +89,15 @@ class CalendarFragment : Fragment() {
         rvCalendarEvents.adapter = eventAdapter
         rvCalendarEvents.layoutManager = LinearLayoutManager(context)
 
-        // Navegación entre meses
+        // Botón "Previo"
         btnPrev.setOnClickListener {
             currentCalendar.add(Calendar.MONTH, -1)
-            selectedDay = -1
+            selectedDay = -1 // Limpiar rastros fantasmas al brincar al mes pasado
             updateCalendarGrid()
-            eventAdapter.submitList(emptyList())
+            eventAdapter.submitList(emptyList()) // Esconder info obsoleta
         }
 
+        // Botón "Siguiente"
         btnNext.setOnClickListener {
             currentCalendar.add(Calendar.MONTH, 1)
             selectedDay = -1
@@ -76,18 +105,18 @@ class CalendarFragment : Fragment() {
             eventAdapter.submitList(emptyList())
         }
 
-        // Seleccionar el día de hoy al inicio
+        // Default: Apuntar autómata a la fecha del día corriente.
         selectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
 
-        // Observar fechas con eventos para actualizar las marcas del calendario
+        // Obtenemos una vez sola (Single Source of Truth) todas las fechas de la DB.
+        // A medida que muta, repinta puntos visuales, transformando una Lista lenta en un HashSet de acceso instantáneo
         eventViewModel.datesWithEvents.observe(viewLifecycleOwner) { dates ->
-            // Parseo robusto para soportar tanto fechas legadas (d/M/yyyy) como nuevas (yyyy-MM-dd)
             datesWithEventsSet = dates.mapNotNull { dateString ->
                 try {
                     if (dateString.contains("-")) {
-                        dateString // Ya está en formato ISO
+                        dateString 
                     } else {
-                        // Formato legado d/M/yyyy
+                        // Por si se migra código heredado con DD/MM/YYYY
                         val parts = dateString.split("/")
                         if (parts.size == 3) {
                             String.format("%04d-%02d-%02d", parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
@@ -98,43 +127,55 @@ class CalendarFragment : Fragment() {
             updateCalendarGrid()
         }
 
-        // Cargar eventos del día de hoy
+        // Llamada de inicialización en crudo
         loadEventsForSelectedDay()
 
         return root
     }
 
+    /**
+     * Propósito: Algoritmo central para calcular dinámicamente y reconstruir la matriz de 35/42 días.
+     * Parámetros: Ninguno.
+     * Retorno: Ninguno.
+     * Lógica interna:
+     * 1. Extracción de Mes y Año base.
+     * 2. Actualización de Titulo "Label" de cabecera.
+     * 3. Busca el "día de la semana (L, M, M)" en que recae el número "1" de ese mes con `get(Calendar.DAY_OF_WEEK)`.
+     * 4. Inyecta casillas "fantasma" (`dayOfMonth = 0`) para rellenar los hoyos previos al primer día de forma ordenada.
+     * 5. Itera e inyecta la numeración sólida usando bucles nativos (ej: `1..31`), resolviendo matemáticamente si un ciclo específico debe iluminarse porque es el presente o cruzarlo contra el HashSet para inyectar `hasEvents`.
+     * 6. Dispara la compilación mandando la lista terminada mediante `calendarAdapter.submitList(days)`.
+     */
     private fun updateCalendarGrid() {
         val today = Calendar.getInstance()
         val year = currentCalendar.get(Calendar.YEAR)
         val month = currentCalendar.get(Calendar.MONTH)
 
-        // Actualizar título del mes
+        // Traducción de Localidad del Mes: "Abril 2026"
         val sdf = SimpleDateFormat("MMMM yyyy", Locale("es", "MX"))
         tvMonthYear.text = sdf.format(currentCalendar.time).replaceFirstChar { it.uppercase() }
 
-        // Calcular primer día del mes y total de días
+        // Localizar offset de desfase inicial del mes
         val cal = Calendar.getInstance()
         cal.set(year, month, 1)
-        val firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK) // 1=Dom, 2=Lun, ...
-        val daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+        val firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK) // Ej: Domingo es 1
+        val daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH) // Límite real contemplando Años Bisiestos
 
         val days = mutableListOf<CalendarDay>()
 
-        // Agregar celdas vacías antes del primer día
-        val emptyDays = firstDayOfWeek - 1 // Calendar.SUNDAY = 1
+        // PASO 1: Calcular e indexar casillas muertas a la izquierda para cuadrar tabla.
+        val emptyDays = firstDayOfWeek - 1
         for (i in 0 until emptyDays) {
             days.add(CalendarDay(dayOfMonth = 0, isToday = false, isSelected = false, hasEvents = false))
         }
 
-        // Agregar los días del mes
+        // PASO 2: Agregar iterativamente del 1 al N.
         for (day in 1..daysInMonth) {
             val isToday = (day == today.get(Calendar.DAY_OF_MONTH)
                     && month == today.get(Calendar.MONTH)
                     && year == today.get(Calendar.YEAR))
+            
             val isSelected = day == selectedDay
 
-            // Construir la fecha con el mismo formato que se guarda en Room: "yyyy-MM-dd"
             val dateStr = String.format("%04d-%02d-%02d", year, month + 1, day)
             val hasEvents = datesWithEventsSet.contains(dateStr)
 
@@ -144,8 +185,14 @@ class CalendarFragment : Fragment() {
         calendarAdapter.submitList(days)
     }
 
+    /**
+     * Propósito: Desencadenar la instrucción a la Base de Datos para recabar el extracto detallado de los elementos pautados para una determinada casilla.
+     * Parámetros: Ninguno.
+     * Retorno: Ninguno.
+     * Lógica interna: Formatea los punteros locales hacia ISO SQL; requiere asincrónicamente `getEventsByDate(dateStr)` al Dao mediador y canaliza transparentemente los fragmentos recibidos a la lista inferior `eventAdapter`.
+     */
     private fun loadEventsForSelectedDay() {
-        if (selectedDay <= 0) return
+        if (selectedDay <= 0) return 
         val year = currentCalendar.get(Calendar.YEAR)
         val month = currentCalendar.get(Calendar.MONTH)
         val dateStr = String.format("%04d-%02d-%02d", year, month + 1, selectedDay)

@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     ==========================================================================
+     Archivo: activity_main.xml
+     Propósito: Diseño principal de la aplicación. Actúa como la "Ventana" raíz 
+     que aloja el menú de navegación y el contenedor central donde se inyectan 
+     los fragmentos (NavHostFragment).
+     Patrón Arquitectónico: Single Activity Architecture (MVVM).
+     ==========================================================================
+-->
+<!-- 
+     DrawerLayout: Contenedor principal necesario para implementar un menú lateral deslizable (Hamburger menu).
+     Permite tener el contenido principal de la app y un panel oculto en el borde izquierdo o derecho.
+-->
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,10 +21,20 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+    <!-- 
+         ConstraintLayout: Motor de renderizado altamente eficiente.
+         Permite posicionar vistas (AppBar, NavHost, BottomNav) mediante reglas relativas (restricciones)
+         sin necesidad de anidar layouts profundamente. 
+         - app:layout_constraintTop_toTopOf="parent" ancla elementos a los bordes.
+    -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- 
+             AppBarLayout: Contenedor de Material Design que dota de efectos de elevación y sombra
+             a la barra de herramientas superior (Toolbar). 
+        -->
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
@@ -27,6 +50,12 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <!-- 
+             NavHostFragment: Este es el "espacio en blanco" o lienzo donde la librería de Navegación 
+             (Jetpack Navigation) irá inyectando e intercambiando dinámicamente nuestros diferentes 
+             Fragments (Home, Add, Calendar, etc.) según el usuario navegue.
+             - app:navGraph indica el mapa de rutas XML a seguir.
+        -->
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
@@ -39,6 +68,10 @@
             app:layout_constraintTop_toBottomOf="@id/appBarLayout"
             app:navGraph="@navigation/nav_graph" />
 
+        <!-- 
+             BottomNavigationView: Menú de navegación anclado en la parte inferior de la pantalla.
+             Permite cambiar rápidamente entre las pantallas principales sin abrir el menú lateral.
+        -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"
             android:layout_width="0dp"
@@ -50,6 +83,10 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- 
+         NavigationView: Representa el panel o menú lateral oculto que aparece al arrastrar 
+         desde el borde izquierdo (start). Ideal para colocar opciones secundarias (Respaldos, Acerca de).
+    -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

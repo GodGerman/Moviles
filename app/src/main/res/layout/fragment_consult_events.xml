@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     ==========================================================================
+     Archivo: fragment_consult_events.xml
+     Propósito: Pantalla de Consultas (Consultar Eventos).
+     Permite cruzar filtros de Categoría y Fecha (Día, Rango, Mes, Año)
+     y despliega los resultados debajo.
+     ==========================================================================
+-->
+<!--
+    ConstraintLayout: Funciona como ancla principal bidimensional.
+    Alberga el título flotante, la tarjeta de filtros estática, y ordena
+    a la lista de resultados ocupar el sobrante.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,7 +30,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Panel de filtros con estilo de tarjeta Material 3 -->
+    <!-- ═══════════ Panel de Filtros ═══════════ -->
+    <!-- 
+         MaterialCardView: Agrupa visualmente los controles de búsqueda (Spinner y Botones).
+         Le confiere un sutil sombreado y borde redondeado para destacar como panel de mando.
+    -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/filter_container"
         android:layout_width="match_parent"
@@ -42,6 +59,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/label_filter_category" />
 
+            <!-- Sub-tarjeta decorativa para enmarcar el Spinner de Categorías -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -65,6 +83,13 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/label_filter_date" />
 
+            <!-- ═══════════ Segmented Buttons (Modo de Fecha) ═══════════ -->
+            <!-- 
+                 MaterialButtonToggleGroup: Un componente moderno de Material 3 
+                 que agrupa botones en un arreglo compacto horizontal (Segmented Buttons).
+                 - app:singleSelection="true": Obliga a que funcionen como RadioButtons (solo uno encendido).
+                 - app:selectionRequired="true": Impide que el usuario los deseleccione todos, asegurando estado de app válido.
+            -->
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/toggle_date_filter_mode"
                 android:layout_width="match_parent"
@@ -106,6 +131,7 @@
                     android:paddingHorizontal="0dp"
                     android:maxLines="1"
                     android:text="@string/mode_month" />
+                    
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_mode_year"
                     style="?attr/materialButtonOutlinedStyle"
@@ -118,6 +144,7 @@
                     android:text="@string/mode_year" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
+            <!-- Fila inferior del mando de filtros: Elegir la fecha y Limpiar todo -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -152,6 +179,13 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- ═══════════ Lista de Resultados ═══════════ -->
+    <!-- 
+         RecyclerView: Ocupa dinámicamente todo el espacio vertical de la pantalla 
+         por debajo de la tarjeta de filtros. (layout_height="0dp").
+         - clipToPadding="false": Permite que los elementos hagan scroll "por detrás" del padding, 
+         mejorando la estética cerca de los bordes.
+    -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_consult_results"
         android:layout_width="match_parent"

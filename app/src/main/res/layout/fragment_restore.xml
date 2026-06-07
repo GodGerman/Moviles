@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     ==========================================================================
+     Archivo: fragment_restore.xml
+     Propósito: Diseño de la pantalla de Restauración.
+     Es casi un diseño gemelo al de Backup, pero enfocado en descargar la DB 
+     desde Google Drive y sobrescribir el archivo local.
+     ==========================================================================
+-->
+<!-- 
+     LinearLayout: Diseño lineal básico.
+     Usa orientación vertical centrada (gravity="center") para apilar
+     el texto y los botones al centro exacto de la pantalla.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,6 +19,7 @@
     android:gravity="center"
     android:padding="24dp">
 
+    <!-- Título Principal -->
     <TextView
         style="@style/TextAppearance.Proyecto.Headline"
         android:layout_width="wrap_content"
@@ -13,6 +27,7 @@
         android:text="@string/nav_restore"
         android:layout_marginBottom="16dp"/>
 
+    <!-- Descripción Explicativa -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,12 +35,21 @@
         android:textAlignment="center"
         android:layout_marginBottom="32dp"/>
 
+    <!-- 
+         Botón de Autenticación con Google.
+         Inicia el flujo de OAUTH2 para obtener los tokens de lectura de Drive.
+    -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_authenticate_restore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/btn_auth_google" />
 
+    <!-- 
+         Botón de Iniciar Restauración.
+         Arranca desactivado por defecto para evitar llamadas nulas al API.
+         Se habilita solo cuando el usuario está logueado exitosamente.
+    -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_start_restore"
         android:layout_width="match_parent"
@@ -34,6 +58,10 @@
         android:enabled="false"
         android:text="@string/btn_start_restore" />
 
+    <!-- 
+         ProgressBar: Indicador de carga.
+         Aparece durante la I/O de red asíncrona mientras se descarga la base de datos.
+    -->
     <ProgressBar
         android:id="@+id/progress_restore"
         android:layout_width="wrap_content"

@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     ==========================================================================
+     Archivo: fragment_add_event.xml
+     Propósito: Formulario principal para la creación de un nuevo evento.
+     ==========================================================================
+-->
+<!-- 
+     ScrollView: Contenedor vital para pantallas de captura de datos (formularios).
+     Permite que el contenido se pueda desplazar verticalmente, asegurando que todos
+     los campos sean accesibles incluso en dispositivos pequeños o cuando el teclado tapa la pantalla.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -30,6 +41,10 @@
             android:layout_marginTop="24dp"
             android:text="@string/label_category" />
 
+        <!-- 
+             MaterialCardView: Utilizado aquí solo para dar un diseño bonito 
+             con esquinas redondeadas al "Spinner" (lista desplegable nativa). 
+        -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,12 +89,18 @@
         </com.google.android.material.card.MaterialCardView>
 
         <!-- ═══════════ Sección: Fecha y Hora ═══════════ -->
+        <!-- LinearLayout horizontal para colocar dos botones lado a lado. -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
+            <!-- 
+                 MaterialButton: Botones estilizados de Google. 
+                 Se usan con 'layout_weight=1' para que ambos botones (Fecha y Hora) 
+                 tomen equitativamente el 50% del ancho disponible cada uno.
+            -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_date"
                 style="@style/Widget.Proyecto.Button.Outlined"
@@ -103,6 +124,11 @@
         </LinearLayout>
 
         <!-- ═══════════ Sección: Descripción ═══════════ -->
+        <!-- 
+             TextInputLayout: Componente avanzado de Material Design para cajas de texto.
+             Brinda la funcionalidad visual de que el "Hint" (texto de fondo) 
+             se anime y flote hacia arriba al momento de escribir. 
+        -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_description"
             style="@style/Widget.Proyecto.TextInputLayout"
@@ -110,6 +136,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp">
 
+            <!-- TextInputEditText: El campo de entrada real para texto, hijo obligatorio del TextInputLayout -->
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_description"
                 android:layout_width="match_parent"
@@ -184,6 +211,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <!-- ═══════════ Botón Guardar ═══════════ -->
+        <!-- Botón primario de color lleno (Filled) para destacar la llamada a la acción principal -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"
             style="@style/Widget.Proyecto.Button"

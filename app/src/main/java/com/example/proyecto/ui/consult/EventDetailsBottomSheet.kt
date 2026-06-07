@@ -15,12 +15,24 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
+/**
+ * Propósito: Panel Desplegable Inferior (BottomSheet) para mostrar los detalles completos y un mapa miniatura interactivo de un evento seleccionado.
+ * Rol en MVVM: Capa de Presentación (UI Layer). Es una vista flotante puramente de exhibición (sin mutación o edición). Carece de lógica robusta más allá del enlazado cosmético (Data Binding).
+ * Interacciones: Se levanta mediante llamadas instanciadas emitidas por fragmentos como [com.example.proyecto.ui.consult.ConsultEventsFragment] o [com.example.proyecto.ui.home.HomeFragment].
+ */
 class EventDetailsBottomSheet : BottomSheetDialogFragment(), OnMapReadyCallback {
 
     private var lat = 0.0
     private var lng = 0.0
+    
+    // Usamos MapView en lugar de SupportMapFragment porque es notoriamente más ligero
+    // en recursos nativos para embeberse limpiamente dentro de paneles modales dinámicos.
     private var mapView: MapView? = null
 
+    /**
+     * 'companion object' (métodos y constantes persistentes vinculados a clase en lugar de instancia).
+     * Mantiene un patrón Factory tipo "newInstance" oficial de Android.
+     */
     companion object {
         private const val ARG_CATEGORIA = "categoria"
         private const val ARG_FECHA = "fecha"
@@ -31,6 +43,13 @@ class EventDetailsBottomSheet : BottomSheetDialogFragment(), OnMapReadyCallback 
         private const val ARG_LNG = "lng"
         private const val ARG_CONTACTO = "contacto"
 
+        /**
+         * Propósito: Crea una nueva instancia inyectando la información base dentro del portafolios (Bundle) de inicialización de Android.
+         * Parámetros: 
+         * - event: La entidad [EventEntity] madre a clonar visualmente.
+         * Retorno: Estructura [EventDetailsBottomSheet] instanciada exitosamente.
+         * Lógica interna: Parsea los campos a componentes sueltos empaquetándolos como Argumentos de Fragmento. Esto previene que una posible destrucción por parte del sistema elimine la información valiosa.
+         */
         fun newInstance(event: EventEntity): EventDetailsBottomSheet {
             val fragment = EventDetailsBottomSheet()
             val args = Bundle().apply {
@@ -48,6 +67,19 @@ class EventDetailsBottomSheet : BottomSheetDialogFragment(), OnMapReadyCallback 
         }
     }
 
+    /**
+     * Propósito: Construcción de la visualización global y el seteo de los detalles estéticos del BottomSheet.
+     * Parámetros:
+     * - inflater: Inflador de layouts.
+     * - container: Contenedor padre.
+     * - savedInstanceState: Estado.
+     * Retorno: Raíz de la vista [View].
+     * Lógica interna:
+     * 1. Desencripta/extrae el Bundle de Arguments pre-establecido en `newInstance`.
+     * 2. Asigna la información a las etiquetas correspondientes re-acomodando formatos para su fácil asimilación humana (fecha partida).
+     * 3. Configura el fondo y tintes de la caja decorativa para el parámetro Estatus (mutando internamente el Drawable en tiempo de compilación nativa sin afectar estilos compartidos).
+     * 4. Prepara la inicialización encadenada manual del `MapView` interno.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -92,6 +124,8 @@ class EventDetailsBottomSheet : BottomSheetDialogFragment(), OnMapReadyCallback 
         drawable?.setTint(ContextCompat.getColor(requireContext(), bgColor))
         tvStatus.background = drawable
 
+        // Es MUY IMPORTANTE pasarle el 'savedInstanceState' y delegar llamadas de ciclo de vida explícitamente,
+        // de lo contrario el mapa interactivo nativo no se dibujará, crasheando por desvinculación a nivel de OpenGL de Android.
         mapView = root.findViewById(R.id.map_preview_details)
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
@@ -99,6 +133,13 @@ class EventDetailsBottomSheet : BottomSheetDialogFragment(), OnMapReadyCallback 
         return root
     }
 
+    /**
+     * Propósito: Reacciona internamente cuando el motor cartográfico finalizó su construcción de fondo (async cartography engine init).
+     * Parámetros:
+     * - googleMap: Referencia oficial y mutable a un motor tipo mapa de Google.
+     * Retorno: Ninguno.
+     * Lógica interna: Deshabilita distracciones externas visuales `isMapToolbarEnabled = false`, centra coordinadas recibidas y acomoda marcadores sin animación con un zoom mediano.
+     */
     override fun onMapReady(googleMap: com.google.android.gms.maps.GoogleMap) {
         googleMap.uiSettings.isMapToolbarEnabled = false
         val position = LatLng(lat, lng)
@@ -106,7 +147,8 @@ class EventDetailsBottomSheet : BottomSheetDialogFragment(), OnMapReadyCallback 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f))
     }
 
-    // --- MapView Lifecycle ---
+    // --- Ciclos de Vida del MapView re-inyectados ---
+    
     override fun onResume() {
         super.onResume()
         mapView?.onResume()

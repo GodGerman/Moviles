@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     ==========================================================================
+     Archivo: bottom_sheet_event_details.xml
+     Propósito: Diseño visual del BottomSheet (Panel inferior desplegable).
+     Muestra en modo de solo lectura todos los atributos de un EventEntity.
+     ==========================================================================
+-->
+<!--
+    LinearLayout: Contenedor secuencial vertical.
+    Dado que su información es de solo-lectura y se alinea de arriba hacia abajo rígidamente,
+    un simple LinearLayout vertical es más ligero en renderizado que un ConstraintLayout.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -7,6 +19,7 @@
     android:padding="24dp"
     android:background="?attr/colorSurface">
 
+    <!-- Categoría como Título Principal -->
     <TextView
         android:id="@+id/tv_details_category"
         android:layout_width="wrap_content"
@@ -16,6 +29,11 @@
         android:textColor="?attr/colorOnSurface"
         android:textStyle="bold" />
 
+    <!-- 
+         Badge de Estatus: Su fondo estético redondeado (status_badge_bg) 
+         se tiñe dinámicamente desde el código Kotlin (Rojo, Verde, Gris) 
+         para proveer retroalimentación visual inmediata.
+    -->
     <TextView
         android:id="@+id/tv_details_status"
         android:layout_width="wrap_content"
@@ -69,6 +87,10 @@
         android:textSize="14sp"
         app:drawableStartCompat="@drawable/ic_location_small" />
 
+    <!-- 
+         MaterialCardView: Funciona como un marco decorativo con esquinas redondeadas (cardCornerRadius)
+         y bordes ligeros (strokeColor) para encapsular limpiamente el mini-mapa dentro de sus confines.
+    -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="180dp"
@@ -78,6 +100,11 @@
         app:strokeColor="@color/divider"
         app:strokeWidth="1dp">
 
+        <!--
+             MapView (Lite Mode): A diferencia del SupportMapFragment pesado, el MapView con
+             `app:liteMode="true"` renderiza el mapa como una simple imagen estática (Bitmap).
+             Esto optimiza dramáticamente la memoria dentro de un BottomSheet sin causar caídas de frames.
+        -->
         <com.google.android.gms.maps.MapView
             android:id="@+id/map_preview_details"
             android:layout_width="match_parent"

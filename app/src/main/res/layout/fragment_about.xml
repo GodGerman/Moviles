@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     ==========================================================================
+     Archivo: fragment_about.xml
+     Propósito: Diseño de la pantalla "Acerca de". Muestra información estática 
+     de la app y los desarrolladores.
+     ==========================================================================
+-->
+<!--
+    NestedScrollView: Permite deslizar su contenido verticalmente si la pantalla es chica.
+    Es 'Nested' para ser compatible con layouts más complejos en el futuro 
+    (como el comportamiento retractil de Coordinators/AppBars).
+-->
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -13,7 +25,7 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Logo / Icon -->
+        <!-- Logo de la aplicación -->
         <ImageView
             android:id="@+id/iv_app_logo"
             android:layout_width="96dp"
@@ -22,7 +34,6 @@
             android:contentDescription="@string/app_name"
             android:src="@mipmap/ic_launcher" />
 
-        <!-- Title -->
         <TextView
             android:id="@+id/tv_about_title"
             android:textAppearance="?attr/textAppearanceHeadlineMedium"
@@ -33,7 +44,6 @@
             android:textAlignment="center"
             android:textColor="?attr/colorOnSurface" />
 
-        <!-- Description -->
         <TextView
             android:id="@+id/tv_about_description"
             android:textAppearance="?attr/textAppearanceBodyLarge"
@@ -45,7 +55,11 @@
             android:textAlignment="center"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
-        <!-- Developers Card -->
+        <!-- 
+             MaterialCardView: Tarjeta de Material Design para agrupar visualmente 
+             los nombres de los desarrolladores del proyecto. Brinda un resalte sutil
+             sobre el color de fondo.
+        -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,6 +83,7 @@
                     android:textColor="?attr/colorOnSurfaceVariant"
                     android:textStyle="bold" />
 
+                <!-- Lista estática de desarrolladores -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

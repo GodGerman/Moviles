@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     ==========================================================================
+     Archivo: item_calendar_day.xml
+     Propósito: Diseño miniatura para CADA pequeño cuadrado numérico del mes.
+     ==========================================================================
+-->
+<!-- 
+     LinearLayout: Diseño lineal minimalista.
+     Es extremadamente simple (Un texto y un circulito) porque el RecyclerView 
+     tendrá que clonar e instanciar este archivo de 35 a 42 veces de golpe.
+     Su rendimiento y peso en memoria debe ser minúsculo.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -6,6 +18,11 @@
     android:orientation="vertical"
     android:paddingVertical="6dp">
 
+    <!-- 
+         TextView Numérico: Muestra el día (Ej. 14). 
+         Su background (círculo) y color de letra se modifican dinámicamente 
+         desde Kotlin según si está "seleccionado", es "hoy" o es "normal".
+    -->
     <TextView
         android:id="@+id/tv_day_number"
         android:layout_width="36dp"
@@ -14,6 +31,11 @@
         android:textSize="14sp"
         android:textColor="@android:color/black" />
 
+    <!-- 
+         Punto Indicador Inferior.
+         Es solo un pequeño "View" coloreado con un shape circular.
+         Cambia su visibility a "VISIBLE" solo si la BD indica que hay eventos ese día.
+    -->
     <View
         android:id="@+id/view_event_indicator"
         android:layout_width="8dp"

@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     ==========================================================================
+     Archivo: item_event.xml
+     Propósito: Diseño base para cada elemento individual de la lista de eventos.
+     Funciona como la plantilla que el EventAdapter clonará.
+     ==========================================================================
+-->
+<!-- 
+     MaterialCardView: Contenedor en forma de "tarjeta" que provee sombras (elevación) 
+     y bordes redondeados. Se utiliza para delimitar visualmente un elemento de otro 
+     en listas largas.
+-->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -9,12 +21,21 @@
     app:cardElevation="2dp"
     app:strokeWidth="0dp">
 
+    <!-- 
+         ConstraintLayout: Excelente para diseñar componentes complejos sin tener 
+         que anidar múltiples LinearLayouts, lo que mejora drásticamente el 
+         rendimiento (Frame rate) al scrollear la lista velozmente.
+    -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
         <!-- Categoría (título principal) -->
+        <!-- 
+             'app:layout_constraintHorizontal_chainStyle="spread_inside"' empuja el 
+             título hacia la izquierda extrema y el estatus hacia la derecha extrema.
+        -->
         <TextView
             android:id="@+id/tv_category"
             android:layout_width="0dp"
@@ -30,7 +51,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Badge de estatus (pill redondeado) -->
+        <!-- Badge de estatus (Cápsula redondeada) -->
         <TextView
             android:id="@+id/tv_status"
             android:layout_width="wrap_content"
@@ -46,7 +67,11 @@
             app:layout_constraintEnd_toStartOf="@id/btn_edit_event"
             app:layout_constraintTop_toTopOf="@id/tv_category" />
 
-        <!-- Botón Editar (oculto por defecto) -->
+        <!-- 
+             Botón Editar: Permite modificar el evento.
+             Se esconde ("gone") por defecto mediante Kotlin dependiendo de si
+             la pantalla actual aprueba o no la edición rápida.
+        -->
         <ImageButton
             android:id="@+id/btn_edit_event"
             android:layout_width="36dp"
@@ -60,7 +85,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_category"
             app:tint="@color/md_primary" />
 
-        <!-- Divider sutil -->
+        <!-- Divider sutil: Una línea horizontal estática de 1dp para separar la cabecera -->
         <View
             android:id="@+id/divider_top"
             android:layout_width="0dp"
@@ -71,7 +96,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_category" />
 
-        <!-- Fecha y hora con icono -->
+        <!-- Fecha y hora con icono embebido usando (drawableStartCompat) -->
         <TextView
             android:id="@+id/tv_datetime"
             android:layout_width="wrap_content"
@@ -87,7 +112,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_top" />
 
-        <!-- Descripción -->
+        <!-- 
+             Descripción: Multilínea truncada ('ellipsize') a 2 líneas para 
+             evitar que un evento con texto kilométrico desconfigure el tamaño 
+             global de la tarjeta y arruine la experiencia de listado.
+        -->
         <TextView
             android:id="@+id/tv_description"
             android:layout_width="0dp"
@@ -102,7 +131,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_datetime" />
 
-        <!-- Ubicación + Contacto -->
+        <!-- Ubicación + Contacto secundario concatenados -->
         <TextView
             android:id="@+id/tv_location_contact"
             android:layout_width="0dp"

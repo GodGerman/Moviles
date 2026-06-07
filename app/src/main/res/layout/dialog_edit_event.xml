@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     ==========================================================================
+     Archivo: dialog_edit_event.xml
+     Propósito: Diseño del diálogo de edición de eventos.
+     Este layout flota sobre la interfaz principal permitiendo alterar datos 
+     o borrar un evento seleccionado.
+     ==========================================================================
+-->
+<!--
+    ScrollView: Permite desplazamiento vertical de sus elementos hijos.
+    Esto es crítico en formularios largos o dispositivos pequeños para asegurar
+    que el usuario pueda alcanzar los botones inferiores cuando el teclado
+    virtual cubre la mitad de la pantalla.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorSurface">
 
+    <!-- 
+         LinearLayout: Contenedor secuencial que apila los campos del formulario
+         uno debajo del otro de manera estructurada. 
+    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,6 +45,10 @@
             android:layout_height="wrap_content"
             android:text="@string/label_category" />
 
+        <!-- 
+             MaterialCardView: Envuelve el Spinner para dotarlo de esquinas redondeadas 
+             y un borde perimetral que cumple con las guías de Material Design. 
+        -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -183,6 +205,10 @@
         </LinearLayout>
 
         <!-- Previsualización de Mapa en Lite Mode -->
+        <!-- 
+             El "Lite Mode" de Google Maps renderiza un mapa estático como si fuera una imagen,
+             ideal para diálogos rápidos porque consume muchísimo menos memoria que un mapa completo interactivo.
+        -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="120dp"

@@ -7,8 +7,27 @@
     <string name="nav_calendar">Mostrar Calendario</string>
     <string name="nav_backup">Realizar Respaldo</string>
     <string name="nav_restore">Restaurar Datos</string>
-    <string name="nav_about">Acerca de…</string>
+    <string name="nav_about">Acerca de</string>
     <string name="nav_exit">Salir</string>
+
+    <!-- About Fragment -->
+    <string name="about_title">Acerca del Proyecto</string>
+    <string name="about_description">Organizador de Tareas es una aplicación robusta diseñada para la gestión eficiente de eventos. Destaca por su arquitectura limpia y ofrece características avanzadas como persistencia local, integración con Google Maps para ubicaciones de eventos, notificaciones automáticas y sincronización segura con respaldo en la nube a través de Google Drive.</string>
+    <string name="about_developers_title">Creado por:</string>
+    <string name="about_developer_1">• Aguilar Bautista César Fernando</string>
+    <string name="about_developer_2">• Dorantes Andrade Laura Michelle</string>
+    <string name="about_developer_3">• Nájera García Sofía Denisse</string>
+
+    <string name="desc_backup">Sube una copia de tu base de datos a Google Drive para no perder tus eventos.</string>
+    <string name="btn_auth_google">Conectar con Google Drive</string>
+    <string name="btn_start_backup">Respaldar Ahora</string>
+    <string name="desc_restore">Descarga tu última copia de seguridad de Google Drive. Esto reemplazará tus eventos actuales.</string>
+    <string name="btn_start_restore">Restaurar Ahora</string>
+    <string name="toast_auth_failed">Autenticación fallida</string>
+    <string name="toast_backup_success">Respaldo exitoso</string>
+    <string name="toast_backup_failed">Fallo al respaldar</string>
+    <string name="toast_restore_success">Restauración exitosa. Reinicia la app.</string>
+    <string name="toast_restore_failed">Fallo al restaurar</string>
 
     <!-- Bottom Navigation -->
     <string name="nav_home">Inicio</string>
@@ -35,6 +54,12 @@
     <string name="label_filter_date">Filtrar por Fecha</string>
     <string name="btn_clear_filters">Limpiar Filtros</string>
     <string name="all_categories">Todas las categorías</string>
+    
+    <string name="mode_day">Día</string>
+    <string name="mode_range">Rango</string>
+    <string name="mode_month">Mes</string>
+    <string name="mode_year">Año</string>
+    <string name="select_date_range">Seleccionar Rango</string>
 
     <!-- Categories -->
     <string-array name="categories_array">
@@ -77,9 +102,12 @@
     <string name="btn_edit_event">Editar evento</string>
     <string name="btn_save_changes">Guardar Cambios</string>
     <string name="btn_cancel">Cancelar</string>
+    <string name="btn_delete">Eliminar</string>
     <string name="hint_contact">Nombre del contacto</string>
     <string name="hint_latitude">Latitud</string>
     <string name="hint_longitude">Longitud</string>
+    <string name="title_delete_event">Eliminar Evento</string>
+    <string name="msg_confirm_delete">¿Estás seguro de que deseas eliminar este evento de forma permanente?</string>
 
     <!-- Event Card (item_event) -->
     <string name="item_category_placeholder">Categoría</string>
@@ -94,6 +122,7 @@
     <string name="toast_fill_required_fields">Por favor completa los campos básicos</string>
     <string name="toast_event_saved">Evento guardado con éxito</string>
     <string name="toast_event_updated">Evento actualizado con éxito</string>
+    <string name="toast_event_deleted">Evento eliminado</string>
     <string name="default_contact">Ninguno</string>
 
     <!-- Notifications -->

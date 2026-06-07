@@ -24,6 +24,9 @@ import com.example.proyecto.viewmodel.EventViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import androidx.work.ExistingWorkPolicy
 
 class AddEventFragment : Fragment() {
 
@@ -54,7 +57,7 @@ class AddEventFragment : Fragment() {
             val projection = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
             context?.contentResolver?.query(contactUri, projection, null, null, null)?.use { cursor ->
                 if (cursor.moveToFirst()) {
-                    selectedContact = cursor.getString(0)
+                    selectedContact = cursor.getString(0) ?: getString(R.string.default_contact)
                     view?.findViewById<TextView>(R.id.tv_selected_contact)?.text = selectedContact
                 }
             }
@@ -81,8 +84,9 @@ class AddEventFragment : Fragment() {
         btnDate.setOnClickListener {
             val calendar = Calendar.getInstance()
             DatePickerDialog(requireContext(), { _, year, month, day ->
-                selectedDate = "$day/${month + 1}/$year"
-                btnDate.text = selectedDate
+                selectedDate = String.format("%04d-%02d-%02d", year, month + 1, day)
+                val uiDate = String.format("%02d/%02d/%04d", day, month + 1, year)
+                btnDate.text = uiDate
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
         }
 
@@ -123,10 +127,12 @@ class AddEventFragment : Fragment() {
                 recordatorio_tipo = spinnerReminder.selectedItemPosition
             )
 
-            eventViewModel.insert(event)
-            scheduleNotification(event)
-            Toast.makeText(context, R.string.toast_event_saved, Toast.LENGTH_SHORT).show()
-            findNavController().navigateUp()
+            viewLifecycleOwner.lifecycleScope.launch {
+                val newId = eventViewModel.insertAndReturnId(event)
+                scheduleNotification(event.copy(id = newId.toInt()))
+                Toast.makeText(context, R.string.toast_event_saved, Toast.LENGTH_SHORT).show()
+                findNavController().navigateUp()
+            }
         }
 
         return root
@@ -136,7 +142,7 @@ class AddEventFragment : Fragment() {
         if (event.recordatorio_tipo == 0) return // Sin recordatorio
 
         val eventDateTimeStr = "${event.fecha} ${event.hora}"
-        val sdf = SimpleDateFormat("d/M/yyyy HH:mm", Locale.getDefault())
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
         val eventDate = sdf.parse(eventDateTimeStr) ?: return
         val eventTimeMillis = eventDate.time
         val currentTimeMillis = System.currentTimeMillis()
@@ -160,7 +166,11 @@ class AddEventFragment : Fragment() {
                 .setInputData(data)
                 .build()
 
-            WorkManager.getInstance(requireContext()).enqueue(notificationWork)
+            WorkManager.getInstance(requireContext()).enqueueUniqueWork(
+                "event_${event.id}",
+                ExistingWorkPolicy.REPLACE,
+                notificationWork
+            )
         }
     }
 }

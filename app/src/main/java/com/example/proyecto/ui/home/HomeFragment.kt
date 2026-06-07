@@ -32,7 +32,7 @@ class HomeFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        eventViewModel.allEvents.observe(viewLifecycleOwner) { events ->
+        eventViewModel.getUpcomingEvents().observe(viewLifecycleOwner) { events ->
             events?.let { adapter.submitList(it) }
         }
 

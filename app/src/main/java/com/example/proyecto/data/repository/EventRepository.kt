@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 class EventRepository(private val eventDao: EventDao) {
     val allEvents: Flow<List<EventEntity>> = eventDao.getAllEvents()
 
-    suspend fun insert(event: EventEntity) {
-        eventDao.insertEvent(event)
+    suspend fun insert(event: EventEntity): Long {
+        return eventDao.insertEvent(event)
     }
 
     suspend fun update(event: EventEntity) {
@@ -25,6 +25,14 @@ class EventRepository(private val eventDao: EventDao) {
 
     fun getFilteredEvents(category: String?, date: String?): Flow<List<EventEntity>> {
         return eventDao.getFilteredEvents(category, date)
+    }
+
+    fun getEventsBetweenDates(startDate: String, endDate: String): Flow<List<EventEntity>> {
+        return eventDao.getEventsBetweenDates(startDate, endDate)
+    }
+
+    fun getFilteredEventsAdvanced(category: String?, startDate: String?, endDate: String?): Flow<List<EventEntity>> {
+        return eventDao.getFilteredEventsAdvanced(category, startDate, endDate)
     }
 
     fun getAllDatesWithEvents(): Flow<List<String>> {

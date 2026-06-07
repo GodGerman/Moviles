@@ -45,7 +45,14 @@ class EventAdapter(
             val context = itemView.context
             tvCategory.text = event.categoria
             tvStatus.text = event.estatus
-            tvDateTime.text = "${event.fecha} | ${event.hora}"
+            var displayDate = event.fecha
+            try {
+                val parts = event.fecha.split("-")
+                if (parts.size == 3) {
+                    displayDate = String.format("%02d/%02d/%04d", parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
+                }
+            } catch (e: Exception) {}
+            tvDateTime.text = "$displayDate | ${event.hora}"
             tvDescription.text = event.descripcion
             tvInfo.text = context.getString(
                 R.string.item_info_format,

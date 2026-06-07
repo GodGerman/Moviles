@@ -65,6 +65,59 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/label_filter_date" />
 
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggle_date_filter_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                app:checkedButton="@+id/btn_mode_day">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_mode_day"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:paddingHorizontal="0dp"
+                    android:maxLines="1"
+                    android:text="@string/mode_day" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_mode_range"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:paddingHorizontal="0dp"
+                    android:maxLines="1"
+                    android:text="@string/mode_range" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_mode_month"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:paddingHorizontal="0dp"
+                    android:maxLines="1"
+                    android:text="@string/mode_month" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_mode_year"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:paddingHorizontal="0dp"
+                    android:maxLines="1"
+                    android:text="@string/mode_year" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,6 +132,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/btn_select_date"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingHorizontal="4dp"
                     app:icon="@drawable/ic_calendar_small"
                     app:iconGravity="textStart" />
 

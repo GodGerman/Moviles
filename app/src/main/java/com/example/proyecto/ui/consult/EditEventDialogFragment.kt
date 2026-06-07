@@ -65,7 +65,7 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
             val projection = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
             context?.contentResolver?.query(contactUri, projection, null, null, null)?.use { cursor ->
                 if (cursor.moveToFirst()) {
-                    selectedContact = cursor.getString(0)
+                    selectedContact = cursor.getString(0) ?: getString(R.string.default_contact)
                     view?.findViewById<TextView>(R.id.et_edit_contact)?.text = selectedContact
                 }
             }
@@ -152,7 +152,16 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
         val statusIndex = statuses.indexOf(estatus)
         if (statusIndex >= 0) spinnerStatus.setSelection(statusIndex)
 
-        btnDate.text = selectedDate
+        try {
+            val parts = selectedDate.split("-")
+            if(parts.size == 3) {
+                btnDate.text = String.format("%02d/%02d/%04d", parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
+            } else {
+                btnDate.text = selectedDate
+            }
+        } catch(e: Exception) {
+            btnDate.text = selectedDate
+        }
         btnTime.text = selectedTime
         etDescription.setText(descripcion)
         tvContact.text = selectedContact
@@ -163,13 +172,14 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
         btnDate.setOnClickListener {
             val calendar = Calendar.getInstance()
             try {
-                val parts = selectedDate.split("/")
-                calendar.set(parts[2].toInt(), parts[1].toInt() - 1, parts[0].toInt())
+                val parts = selectedDate.split("-")
+                calendar.set(parts[0].toInt(), parts[1].toInt() - 1, parts[2].toInt())
             } catch (_: Exception) { }
 
             DatePickerDialog(requireContext(), { _, year, month, day ->
-                selectedDate = "$day/${month + 1}/$year"
-                btnDate.text = selectedDate
+                selectedDate = String.format("%04d-%02d-%02d", year, month + 1, day)
+                val uiDate = String.format("%02d/%02d/%04d", day, month + 1, year)
+                btnDate.text = uiDate
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
         }
 
@@ -225,29 +235,61 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
             com.google.android.material.R.attr.materialButtonOutlinedStyle
         ).apply {
             text = getString(R.string.btn_cancel)
+            insetTop = 0
+            insetBottom = 0
+            textSize = 12f
+            maxLines = 1
             layoutParams = android.widget.LinearLayout.LayoutParams(
                 0,
                 android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
                 1f
             ).apply {
-                marginEnd = 8
+                marginEnd = 4
             }
             setOnClickListener { dismiss() }
         }
 
-        val btnSave = com.google.android.material.button.MaterialButton(requireContext()).apply {
-            text = getString(R.string.btn_save_changes)
+        val btnDelete = com.google.android.material.button.MaterialButton(
+            requireContext(),
+            null,
+            com.google.android.material.R.attr.materialButtonOutlinedStyle
+        ).apply {
+            text = getString(R.string.btn_delete)
+            setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.md_error))
+            setStrokeColorResource(R.color.md_error)
+            insetTop = 0
+            insetBottom = 0
+            textSize = 12f
+            maxLines = 1
             layoutParams = android.widget.LinearLayout.LayoutParams(
                 0,
                 android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
                 1f
             ).apply {
-                marginStart = 8
+                marginEnd = 4
+                marginStart = 4
+            }
+            setOnClickListener { deleteEvent() }
+        }
+
+        val btnSave = com.google.android.material.button.MaterialButton(requireContext()).apply {
+            text = getString(R.string.btn_save_changes)
+            insetTop = 0
+            insetBottom = 0
+            textSize = 12f
+            maxLines = 1
+            layoutParams = android.widget.LinearLayout.LayoutParams(
+                0,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            ).apply {
+                marginStart = 4
             }
             setOnClickListener { saveEvent(view) }
         }
 
         buttonLayout.addView(btnCancel)
+        buttonLayout.addView(btnDelete)
         buttonLayout.addView(btnSave)
         container.addView(buttonLayout)
     }
@@ -314,5 +356,32 @@ class EditEventDialogFragment : DialogFragment(), OnMapReadyCallback {
         eventViewModel.update(updatedEvent)
         Toast.makeText(context, R.string.toast_event_updated, Toast.LENGTH_SHORT).show()
         dismiss()
+    }
+
+    private fun deleteEvent() {
+        val eventToDelete = EventEntity(
+            id = eventId,
+            categoria = "",
+            fecha = "",
+            hora = "",
+            descripcion = "",
+            estatus = "",
+            ubicacion_lat = 0.0,
+            ubicacion_lng = 0.0,
+            contacto_nombre = "",
+            recordatorio_tipo = 0
+        )
+        // Dialog confirmation
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle(R.string.title_delete_event)
+            .setMessage(R.string.msg_confirm_delete)
+            .setPositiveButton(R.string.btn_delete) { _, _ ->
+                eventViewModel.delete(eventToDelete)
+                androidx.work.WorkManager.getInstance(requireContext()).cancelUniqueWork("event_${eventId}")
+                Toast.makeText(context, R.string.toast_event_deleted, Toast.LENGTH_SHORT).show()
+                dismiss()
+            }
+            .setNegativeButton(R.string.btn_cancel, null)
+            .show()
     }
 }

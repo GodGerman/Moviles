@@ -84,6 +84,11 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="@string/btn_select_date"
+                android:maxLines="1"
+                android:textSize="12sp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingHorizontal="4dp"
                 app:icon="@drawable/ic_calendar_small"
                 app:iconGravity="textStart" />
 
@@ -94,6 +99,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/btn_select_time"
+                android:maxLines="1"
+                android:textSize="12sp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingHorizontal="4dp"
                 app:icon="@drawable/ic_time_small"
                 app:iconGravity="textStart" />
         </LinearLayout>

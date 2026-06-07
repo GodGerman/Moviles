@@ -81,7 +81,20 @@ class CalendarFragment : Fragment() {
 
         // Observar fechas con eventos para actualizar las marcas del calendario
         eventViewModel.datesWithEvents.observe(viewLifecycleOwner) { dates ->
-            datesWithEventsSet = dates.toSet()
+            // Parseo robusto para soportar tanto fechas legadas (d/M/yyyy) como nuevas (yyyy-MM-dd)
+            datesWithEventsSet = dates.mapNotNull { dateString ->
+                try {
+                    if (dateString.contains("-")) {
+                        dateString // Ya está en formato ISO
+                    } else {
+                        // Formato legado d/M/yyyy
+                        val parts = dateString.split("/")
+                        if (parts.size == 3) {
+                            String.format("%04d-%02d-%02d", parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
+                        } else null
+                    }
+                } catch (e: Exception) { null }
+            }.toSet()
             updateCalendarGrid()
         }
 
@@ -121,8 +134,8 @@ class CalendarFragment : Fragment() {
                     && year == today.get(Calendar.YEAR))
             val isSelected = day == selectedDay
 
-            // Construir la fecha con el mismo formato que se guarda en Room: "d/M/yyyy"
-            val dateStr = "$day/${month + 1}/$year"
+            // Construir la fecha con el mismo formato que se guarda en Room: "yyyy-MM-dd"
+            val dateStr = String.format("%04d-%02d-%02d", year, month + 1, day)
             val hasEvents = datesWithEventsSet.contains(dateStr)
 
             days.add(CalendarDay(dayOfMonth = day, isToday = isToday, isSelected = isSelected, hasEvents = hasEvents))
@@ -135,7 +148,7 @@ class CalendarFragment : Fragment() {
         if (selectedDay <= 0) return
         val year = currentCalendar.get(Calendar.YEAR)
         val month = currentCalendar.get(Calendar.MONTH)
-        val dateStr = "$selectedDay/${month + 1}/$year"
+        val dateStr = String.format("%04d-%02d-%02d", year, month + 1, selectedDay)
 
         eventViewModel.getEventsByDate(dateStr).observe(viewLifecycleOwner) { events ->
             eventAdapter.submitList(events)

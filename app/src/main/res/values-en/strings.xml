@@ -10,6 +10,17 @@
     <string name="nav_about">About…</string>
     <string name="nav_exit">Exit</string>
 
+    <string name="desc_backup">Upload a backup of your database to Google Drive to keep your events safe.</string>
+    <string name="btn_auth_google">Connect with Google Drive</string>
+    <string name="btn_start_backup">Backup Now</string>
+    <string name="desc_restore">Download your latest backup from Google Drive. This will replace your current events.</string>
+    <string name="btn_start_restore">Restore Now</string>
+    <string name="toast_auth_failed">Authentication failed</string>
+    <string name="toast_backup_success">Backup successful</string>
+    <string name="toast_backup_failed">Backup failed</string>
+    <string name="toast_restore_success">Restore successful. Restart the app.</string>
+    <string name="toast_restore_failed">Restore failed</string>
+
     <!-- Bottom Navigation -->
     <string name="nav_home">Home</string>
     <string name="nav_consult">View</string>
@@ -35,6 +46,12 @@
     <string name="label_filter_date">Filter by Date</string>
     <string name="btn_clear_filters">Clear Filters</string>
     <string name="all_categories">All categories</string>
+
+    <string name="mode_day">Day</string>
+    <string name="mode_range">Range</string>
+    <string name="mode_month">Month</string>
+    <string name="mode_year">Year</string>
+    <string name="select_date_range">Select Range</string>
 
     <!-- Categories -->
     <string-array name="categories_array">
@@ -77,9 +94,12 @@
     <string name="btn_edit_event">Edit event</string>
     <string name="btn_save_changes">Save Changes</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="btn_delete">Delete</string>
     <string name="hint_contact">Contact name</string>
     <string name="hint_latitude">Latitude</string>
     <string name="hint_longitude">Longitude</string>
+    <string name="title_delete_event">Delete Event</string>
+    <string name="msg_confirm_delete">Are you sure you want to permanently delete this event?</string>
 
     <!-- Event Card (item_event) -->
     <string name="item_category_placeholder">Category</string>
@@ -94,6 +114,7 @@
     <string name="toast_fill_required_fields">Please fill in the required fields</string>
     <string name="toast_event_saved">Event saved successfully</string>
     <string name="toast_event_updated">Event updated successfully</string>
+    <string name="toast_event_deleted">Event deleted</string>
     <string name="default_contact">None</string>
 
     <!-- Notifications -->

@@ -66,7 +66,14 @@ class EventDetailsBottomSheet : BottomSheetDialogFragment(), OnMapReadyCallback 
         val contacto = args.getString(ARG_CONTACTO, "")
 
         root.findViewById<TextView>(R.id.tv_details_category).text = categoria
-        root.findViewById<TextView>(R.id.tv_details_datetime).text = "$fecha | $hora"
+        var displayDate = fecha
+        try {
+            val parts = fecha.split("-")
+            if (parts.size == 3) {
+                displayDate = String.format("%02d/%02d/%04d", parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
+            }
+        } catch (e: Exception) {}
+        root.findViewById<TextView>(R.id.tv_details_datetime).text = "$displayDate | $hora"
         root.findViewById<TextView>(R.id.tv_details_description).text = descripcion
         root.findViewById<TextView>(R.id.tv_details_contact).text = contacto
         root.findViewById<TextView>(R.id.tv_details_location).text = getString(R.string.item_location_format, lat, lng)
